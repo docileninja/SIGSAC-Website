@@ -1,0 +1,83 @@
+@font-face {
+	font-family: mindstorms;
+	src: url('fonts/Mindstorms.ttf');
+}
+
+body
+{
+	background-color: gray;
+	background-image: url("images/background.png");
+	background-repeat: repeat;
+}
+
+#site_strip
+{
+	background-color: white;
+	width: 800px;
+	margin-top: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 400px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	padding: 40px;
+}
+
+#title_container
+{
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 10px;
+}
+
+#site_title
+{
+	font-size: 40px;
+	text-decoration: none;
+	color: black;
+
+	float: left;
+	margin: 0px;
+	margin-right: 5px;
+	font-family: mindstorms;
+}
+
+#slogan
+{
+	margin: 0px;
+	margin-top: 15px;
+	margin-bottom: auto;
+	vertical-align: bottom;
+	color: #666666;
+}
+
+#nav
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	float: left;
+	width: 100%;
+	overflow: auto;
+}
+
+.page_link
+{
+	text-decoration: none;
+	color: #111111;
+	margin-right: 15px;
+}
+
+#signup
+{
+	float: right;
+}
+
+#content
+{
+	margin-top: 10px;
+	overflow: auto;
+}
+
+#carosel
+{
+	width: 100%;
+}
