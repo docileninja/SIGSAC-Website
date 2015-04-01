@@ -1,0 +1,10 @@
+{
+	"name": "sigsac-web",
+	"author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
+	"dependencies": {
+		"express": "*",
+		"express-static": "*",
+		"express-session": "*",
+		"jade": "*"
+	}
+}

@@ -1,0 +1,149 @@
+@font-face {
+	font-family: mindstorms;
+	src: url('fonts/Mindstorms.ttf');
+}
+
+body
+{
+	background-color: gray;
+	background-image: url("images/texture.png");
+	background-repeat: repeat;
+	margin-top: 10px;
+	margin-bottom: 50px;
+}
+
+a
+{
+	overflow: auto;
+}
+
+#site_strip
+{
+	background-color: white;
+	width: 800px;
+	margin-top: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 400px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	padding: 40px;
+	overflow: auto;
+}
+
+header
+{
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 10px;
+}
+
+#logo
+{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 291px;
+}
+
+nav
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	float: left;
+	width: 100%;
+	overflow: auto;
+}
+
+.page_link
+{
+	text-decoration: none;
+	color: #111111;
+	margin-right: 15px;
+}
+
+.page_link:hover
+{
+	text-decoration: underline;
+}
+
+.current_page
+{
+	text-decoration: underline;
+}
+
+#login
+{
+	float: right;
+}
+
+#signup
+{
+	margin-right: 0px;
+}
+
+main
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	overflow: auto;
+	float: left;
+	width: 100%;
+}
+
+#carosel
+{
+	width: 100%;
+}
+
+#lessons
+{
+	margin-left: 5%;
+	overflow: auto;
+	float: left;
+	width: 95%;
+}
+
+.lesson
+{
+	width: 100%;
+	overflow: auto;
+	float: left;
+}
+
+.lesson_title
+{
+	width: 100%;
+	margin: 0px;
+	margin-bottom: 10px;
+}
+
+.lesson_thumb
+{
+	margin-left: 20px;
+	width: 20%;
+	float: left;
+}
+
+.lesson_description
+{
+	float: right;
+	width: 75%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+footer 
+{
+	margin-top: 30px;
+	text-align: center;
+	font-size: 12px;
+	color: #aaaaaa;
+	overflow: auto;
+	float: left;
+	width: 100%;
+}
+
+#footer_images img 
+{
+	height: 40px;
+}
