@@ -1,24 +1,54 @@
-mixin head(name)
+mixin _head(name, stylesheets)
 	head
 		meta(charset="UTF-8")
 		title= "SIGSAC | " + name
 		link(rel="stylesheet" type="text/css" href="css/site.css")
+		if locals.stylesheets
+			each stylesheet in stylesheets
+				link(rel="stylesheet" type="text/css" href="#{stylesheet}")
 
-mixin header(leftSites, rightSites)
+mixin _header(leftSites, rightSites, loggedin)
 	header
 		a(id="logo" href="index")
 			img(src="images/sigsaclogo.png")
 	nav
-		a(class="page_link current_page" href="index") home
-		a(class="page_link" href="about") about
-		#login
-			a(class="page_link" id="signup" href="signin") signin/
-			a(class="page_link" id="signup" href="signup") signup
+		each site in leftSites
+			if site.current == true
+				a(class="page_link current_page" href="#{site.link}") #{site.title}
+			else
+				a(class="page_link" href="#{site.link}") #{site.title}
+		//- each site in rightSites
+		//- 	if site.current == true
+		//- 		a(class="page_link right current_page" href="#{site.link}") #{site.title}
+		//- 	else
+		//- 		a(class="page_link right" href="#{site.link}") #{site.title}
+		if loggedin != true
+			#login
+				a(class="page_link" id="signup" href="signin") signin/
+				a(class="page_link" id="signup" href="signup") signup
 
-mixin footer()
+mixin _footer()
 	footer
 		#footer_images
 			a(href="http://www.usma.edu/")
 				img(src="http://www.usma.edu/Style%20Library/WestPoint/Images/wpLogo102.png")
 			a(href="http://www.sigsac.org/")
 				img(src="http://www.sigsac.org/ccs/CCS2014/images/acm_logo.jpg")
+
+mixin _lessons(lessons)
+	#lessons
+		each lesson in lessons
+			.lesson
+				h2(class="lesson_title") #{lesson.title}
+				img(class="lesson_thumb" src="#{lesson.link}")
+				p(class="lesson_description") #{lesson.desc}
+
+mixin _challenges(challenges)
+	#challenges
+		each challenge in challenges
+			.challenge
+				h2(class="challenge_title") #{challenge.title}
+				p(class="challenge_description") #{challenge.desc}
+				each lesson in lessons
+					a(href="")
+						#{lesson.title}

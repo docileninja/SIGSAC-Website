@@ -2,14 +2,14 @@ include ./templates.jade
 
 doctype html
 html(lang="en")
-	+head("Home")
+	+_head("Home")
 	body
 		#site_strip
-			+header("hello")
+			+_header(pagelist.left, pagelist.right, pagelist.loggedin)
 			main
 				figure
 					a(href="images/teamphoto-large.jpg")
-						img(src="images/teamphoto.jpg")
+						img(class="carosel" src="images/teamphoto.jpg")
 					figcaption photo: wow such hacking
 				section
 					h1 Recent Challenges
@@ -17,15 +17,5 @@ html(lang="en")
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				section
 					h1 Past Lessons
-					#lessons
-						.lesson
-							h2(class="lesson_title") Lesson 12 - Buffer Overflow
-							img(class="lesson_thumb" src="https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg")
-							p(class="lesson_description").
-								Buffer overflow errors are characterized by the overwriting of memory fragments of the process, which should have never been modified intentionally or unintentionally. Overwriting values of the IP (Instruction Pointer), BP (Base Pointer) and other registers causes exceptions, segmentation faults, and other errors to occur.\
-						.lesson
-							h2(class="lesson_title") Lesson 11 - Format Strings
-							img(class="lesson_thumb" src="https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg")
-							p(class="lesson_description").
-								The Format String exploit occurs when the submitted data of an input string is evaluated as a command by the application. In this way, the attacker could execute code, read the stack, or cause a segmentation fault in the running application, causing new behaviors that could compromise the security or the stability of the system.
-			footer()
+					+_lessons(lessons)
+			+_footer()

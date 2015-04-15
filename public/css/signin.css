@@ -1,0 +1,40 @@
+#signin_box
+{
+	width: 300px;
+	margin: 40px auto;
+}
+
+#signin_bottom
+{
+	overflow: auto;
+	padding: 20px;
+	background-color: #efefef;
+}
+
+label
+{
+	float: left;
+}
+
+input
+{
+	margin-top: 10px;
+}
+
+input[name="email"]
+{
+	float: right;
+	width: 100%;
+}
+
+input[name="password"]
+{
+	float: right;
+	width: 100%;
+}
+
+input[value="submit"]
+{
+	margin-left: auto;
+	margin-right: auto;
+}

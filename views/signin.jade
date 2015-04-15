@@ -1,0 +1,26 @@
+include ./templates.jade
+
+doctype html
+html(lang="en")
+	+_head("Signin", stylesheets)
+	body
+		#site_strip
+			+_header()
+			main
+				section#signin_box
+					h1 signin
+					section#signin_bottom
+						form(action="signin" method="POST")
+							label email:
+							input(type="text" name="email")
+							br
+							br
+							br
+							label password:
+							input(type="password" name="password")
+							br
+							br
+							br
+							div#button_div
+								input(type="submit" value="submit")
+			+_footer()

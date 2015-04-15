@@ -2,14 +2,14 @@ include ./templates.jade
 
 doctype html
 html(lang="en")
-	+head("About")
+	+_head("About")
 	body
 		#site_strip
-			+header(leftSite, rightSites)
+			+_header(pagelist.left, pagelist.right, pagelist.loggedin)
 			main
 				figure
 					a(href="images/teamphoto-large.jpg")
-						img(src="images/teamphoto.jpg")
+						img(class="carosel" src="images/teamphoto.jpg")
 					figcaption photo: wow such hacking
 				section
 					h1 Recent Challenges
@@ -28,4 +28,4 @@ html(lang="en")
 							img(class="lesson_thumb" src="https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg")
 							p(class="lesson_description").
 								The Format String exploit occurs when the submitted data of an input string is evaluated as a command by the application. In this way, the attacker could execute code, read the stack, or cause a segmentation fault in the running application, causing new behaviors that could compromise the security or the stability of the system.
-			footer()
+			+_footer

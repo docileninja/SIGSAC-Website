@@ -6,7 +6,7 @@
 body
 {
 	background-color: gray;
-	background-image: url("images/texture.png");
+	background-image: url("/images/texture.png");
 	background-repeat: repeat;
 	margin-top: 10px;
 	margin-bottom: 50px;
@@ -61,6 +61,11 @@ nav
 	margin-right: 15px;
 }
 
+.right
+{
+	float: right;
+}
+
 .page_link:hover
 {
 	text-decoration: underline;
@@ -90,7 +95,7 @@ main
 	width: 100%;
 }
 
-#carosel
+.carosel
 {
 	width: 100%;
 }

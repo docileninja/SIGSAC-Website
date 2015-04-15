@@ -1,0 +1,27 @@
+{
+	"left": [
+		{
+			"title": "home",
+			"link": "index",
+			"current": false
+		},
+		{
+			"title": "about",
+			"link": "about",
+			"current": false
+		}
+	],
+	"right": [
+		{
+			"title": "signin/",
+			"link": "signin",
+			"current": false
+		},
+		{
+			"title": "signup",
+			"link": "signup",
+			"current": false
+		}
+	],
+	"loggedin": false
+}
