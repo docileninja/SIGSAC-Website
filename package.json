@@ -1,10 +1,25 @@
 {
-	"name": "sigsac-web",
-	"author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
-	"dependencies": {
-		"express": "*",
-		"express-static": "*",
-		"express-session": "*",
-		"jade": "*"
-	}
+  "name": "sigsac-web",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
+  "scripts": {
+	"start": "node index.js",
+	"predeploy": ""
+  },
+  "repository": {
+	"type": "git",
+	"url": ""
+  },
+  "dependencies": {
+	"express": "*",
+	"express-static": "*",
+	"express-session": "*",
+	"jade": "*",
+	"orm": "*",
+	"mysql": "*",
+	"morgan": "*"
+  },
+  "private": true,
+  "license": "MIT"
 }

@@ -1,51 +1,66 @@
+mysql = require "mysql"
+
+pool = mysql.createPool
+	connectionLimit: 100,
+	host: "localhost"
+	user: "sigsac"
+	password: "sigsac"
+	database: "sigsac"
+
 ###MEMBER###
 
-exports.getMembers = () ->
-	#derp
+exports.getMembers = (fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT * FROM members;", (err, rows) ->
+			conn.release()
+			fn rows
 
-exports.getMember = (memberID) ->
-	#derp
+exports.getMember = (handle, fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT * FROM members WHERE handle = '" + handle + "';", (err, rows) ->
+			conn.release()
+			fn rows[0]
 
 exports.checkin = (memberID) ->
 	#derp
 
-###challenges = [
-	{"name"}
-]###
+exports.getChallenges = (fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT * FROM challenges;", (err, rows) ->
+			conn.release()
+			fn rows
 
-exports.getChallenges = () ->
-	#derp
+exports.getLastXChallenges = (n, fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT * FROM challenges LIMIT " + n + ";", (err, rows) ->
+			conn.release()
+			fn rows
 
-exports.getLastXChallenges = (n) ->
-	#derp
+exports.getLessons = (fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT lesson_name AS title, description, image_link AS link FROM lessons ORDER BY on_date DESC;", (err, rows) ->
+			conn.release()
+			fn rows
 
-lessons = [
-
-	{
-		"title": "Lesson 13 - Buffer Overflow"
-		"desc": "you overflow the buffer duh"
-		"link": "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg"
-	}
-
-	{
-		"title": "Lesson 12 - Format String"
-		"desc": "just format it stupid"
-		"link": "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg"
-	}
-
-]
-
-exports.getLessons = () ->
-	return lessons
-
-exports.getLastXLessons = (n) ->
-	lastLessons = (lessons[num] for num in [lessons.length..lessons.length-n])
-	return lastLessons
+exports.getLastXLessons = (n, fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT lesson_name AS title, description, image_link AS link FROM lessons ORDER BY on_date DESC LIMIT " + n + ";", (err, rows) ->
+			conn.release()
+			fn rows
 
 ###STAFF###
 
-exports.getAttendance = () ->
-	#derp
+exports.getAllMembersAttendance = (fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT DISTINCT handle FROM member_attends_lesson;", (err, members) ->
+			conn.release()
+			fn (member["handle"] for member in members)
+
+exports.getAttendanceForMember = (handle, fn) ->
+	pool.getConnection (err, conn) ->
+		conn.query "SELECT lesson FROM member_attends_lesson WHERE handle = '" + handle + "';", (err, lessons) ->
+			conn.release()
+			fn (lesson["lesson"] for lesson in lessons)
 
 exports.addChallenge = (title, file, desc, lessonIDs) ->
 	#derp
