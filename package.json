@@ -5,18 +5,17 @@
   "author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
   "scripts": {
 	"start": "node index.js",
-	"predeploy": ""
+	"deploy": "sh deploy.sh"
   },
   "repository": {
 	"type": "git",
-	"url": ""
+	"url": "https://github.com/docileninja/SIGSAC-Website.git"
   },
   "dependencies": {
 	"express": "*",
 	"express-static": "*",
 	"express-session": "*",
 	"jade": "*",
-	"orm": "*",
 	"mysql": "*",
 	"morgan": "*"
   },
