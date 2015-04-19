@@ -1,0 +1,33 @@
+body
+{
+	background-color: gray;
+}
+
+#site_strip
+{
+	background-color: white;
+	width: 800px;
+	margin-top: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 400px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	padding: 10px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+#nav
+{
+	
+}
+
+#site_title
+{
+	float: left;
+}
+
+#pages
+{
+
+}
