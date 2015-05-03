@@ -4,8 +4,9 @@
   "description": "",
   "author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
   "scripts": {
-	"start": "node index.js",
-	"deploy": "sh deploy.sh"
+	"start": "sh start.sh",
+	"deploy": "sh deploy.sh",
+    "stop": "sh stop.sh"
   },
   "repository": {
 	"type": "git",
@@ -17,7 +18,8 @@
 	"express-session": "*",
 	"jade": "*",
 	"mysql": "*",
-	"morgan": "*"
+	"morgan": "*",
+    "pm2": "*"
   },
   "private": true,
   "license": "MIT"

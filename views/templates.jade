@@ -22,10 +22,10 @@ mixin _header(leftSites, rightSites, loggedin)
 		//- 		a(class="page_link right current_page" href="#{site.link}") #{site.title}
 		//- 	else
 		//- 		a(class="page_link right" href="#{site.link}") #{site.title}
-		if loggedin != true
-			#login
-				a(class="page_link" id="signup" href="signin") signin/
-				a(class="page_link" id="signup" href="signup") signup
+		//if loggedin != true
+		//	#login
+		//		a(class="page_link" id="signup" href="signin") signin/
+		//		a(class="page_link" id="signup" href="signup") signup
 
 mixin _footer()
 	footer
@@ -35,13 +35,26 @@ mixin _footer()
 			a(href="http://www.sigsac.org/")
 				img(src="http://www.sigsac.org/ccs/CCS2014/images/acm_logo.jpg")
 
+//mixin _lessons(lessons)
+//	#lessons
+//		each lesson in lessons
+//			.lesson
+//				h2(class="lesson_title") #{lesson.title}
+//				img(class="lesson_thumb" src="#{lesson.link}")
+//				p(class="lesson_description") #{lesson.description}
+
 mixin _lessons(lessons)
 	#lessons
-		each lesson in lessons
-			.lesson
-				h2(class="lesson_title") #{lesson.title}
-				img(class="lesson_thumb" src="#{lesson.link}")
-				p(class="lesson_description") #{lesson.description}
+		.lesson
+			h2(class="lesson_title") Buffer Overflow
+			a(href="https://www.youtube.com/watch?v=ahUBv0Nvk1Y")
+				img(class="lesson_thumb" src="https://i.ytimg.com/vi/ahUBv0Nvk1Y/mqdefault.jpg")
+			p(class="lesson_description") This video can help you learn a little bit more about the mechanics behind buffer overflows. It is relatively in depth and includes good examples.
+		.lesson
+			h2(class="lesson_title") argc/argv
+			a(href="https://www.youtube.com/watch?v=aP1ijjeZc24")
+				img(class="lesson_thumb" src="https://i.ytimg.com/vi_webp/aP1ijjeZc24/mqdefault.webp")
+			p(class="lesson_description") Understanding of argc and argv is critical to any c programming, whether or not it is security related. This video outlines how it works in a program and where each part comes from.
 
 mixin _challenges(challenges)
 	#challenges

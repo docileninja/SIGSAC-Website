@@ -10,12 +10,25 @@ html(lang="en")
 				figure
 					a(href="images/teamphoto-large.jpg")
 						img(class="carosel" src="images/teamphoto.jpg")
-					figcaption photo: wow such hacking
+					figcaption SIGSAC club photo
+				p.
+					The USMA chapter of SIGSAC is dedicated to the development of future cyber leaders.
+					In addition to the create of Army Cyber leaders, each SIGSAC meeting is a structured
+					lesson. These lessons, taught by club members, focus on various fields in cyber
+					security such as advanced persistent threats, classic buffer overflows, and amature
+					radio. On the weekends, SIGSAC also occasionally hosts cyber competitions.
+				section
+					h1 Videos
+					+_lessons(lessons)
 				section
 					h1 Recent Challenges
-					p.
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				section
-					h1 Past Lessons
-					+_lessons(lessons)
+					#challenges
+						.challenge
+							h2(class="challenge_title") echo
+							p(class="challenge_description") For this one you should know the basics of a buffer overflow. If you don't know how to perform an attack, that's fine. The goal here is just to crash the program to get the flag. (hint python -c "statement" will execute the statement).
+							a(href="challenges/echo") download
+						.challenge
+							h2(class="challenge_title") delta
+							p(class="challenge_description") This challenge requires you know a bit about how Linux programs work. It is recommended that you open it in IDA or objdump and look at the assembly for comparisons. Knowing how argc and argv work would also help.
+							a(href="challenges/delta") download
 			+_footer()

@@ -12,9 +12,20 @@ body
 	margin-bottom: 50px;
 }
 
+h1
+{
+	margin-bottom: 0px;
+}
+
 a
 {
-	overflow: auto;
+	text-decoration: underline;
+	color: #777;
+}
+
+a:hover
+{
+	text-decoration: none;
 }
 
 #site_strip
@@ -61,14 +72,14 @@ nav
 	margin-right: 15px;
 }
 
-.right
-{
-	float: right;
-}
-
 .page_link:hover
 {
 	text-decoration: underline;
+}
+
+.right
+{
+	float: right;
 }
 
 .current_page
@@ -106,6 +117,7 @@ main
 	overflow: auto;
 	float: left;
 	width: 95%;
+	margin-bottom: 20px;
 }
 
 .lesson
@@ -118,8 +130,7 @@ main
 .lesson_title
 {
 	width: 100%;
-	margin: 0px;
-	margin-bottom: 10px;
+	margin: 10px 0px;
 }
 
 .lesson_thumb
@@ -135,6 +146,33 @@ main
 	width: 75%;
 	margin-top: 0px;
 	margin-bottom: 0px;
+}
+
+#challenges
+{
+	margin-left: 5%;
+	overflow: auto;
+	float: left;
+	width: 95%;
+}
+
+.challenge
+{
+	width: 100%;
+	overflow: auto;
+	float: left;
+}
+
+.challenge_title
+{
+	width: 100%;
+	margin: 10px 0px;
+	margin-bottom: 10px;
+}
+
+.challenge_description
+{
+	margin-bottom: 10px;
 }
 
 footer 

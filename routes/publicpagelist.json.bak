@@ -4,7 +4,12 @@
 			"title": "home",
 			"link": "index",
 			"current": false
-		}
+		},
+		{
+		"title": "about",
+		"link": "about",
+		"current": false
+	  }
 	],
 	"right": [
 		{
