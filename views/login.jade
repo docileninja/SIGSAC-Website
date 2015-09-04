@@ -2,15 +2,15 @@ include ./templates.jade
 
 doctype html
 html(lang="en")
-	+_head("Signin", stylesheets)
+	+_head("Login", stylesheets)
 	body
 		#site_strip
 			+_header()
 			main
 				section#signin_box
-					h1 signin
+					h1 login
 					section#signin_bottom
-						form(action="signin" method="POST")
+						form(action="/login" method="POST")
 							label email:
 							input(type="text" name="email")
 							br

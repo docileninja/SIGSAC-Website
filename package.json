@@ -3,24 +3,41 @@
   "version": "0.1.0",
   "description": "",
   "author": "Adam Van Prooyen <adam.vanpr@gmail.com>",
+  "main": "index.coffee",
+
   "scripts": {
 	"start": "sh start.sh",
 	"deploy": "sh deploy.sh",
     "stop": "sh stop.sh"
   },
+
   "repository": {
 	"type": "git",
 	"url": "https://github.com/docileninja/SIGSAC-Website.git"
   },
+
   "dependencies": {
 	"express": "*",
 	"express-static": "*",
 	"express-session": "*",
-	"jade": "*",
+
+    "passport": "~0.1.17",
+    "passport-local": "~0.1.6",
+
+    "connect-flash" : "~0.1.1",
+    "bcrypt-nodejs" : "latest",
+
+    "jade": "*",
 	"mysql": "*",
+    "mongoose" : "~3.8.1",
 	"morgan": "*",
-    "pm2": "*"
+    "pm2": "*",
+
+    "body-parser": "~1.0.0",
+    "cookie-parser": "~1.0.0",
+    "method-override": "~1.0.0"
   },
+
   "private": true,
   "license": "MIT"
 }

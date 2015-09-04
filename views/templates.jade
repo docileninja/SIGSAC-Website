@@ -3,20 +3,17 @@ mixin _head(name, stylesheets)
 		meta(charset="UTF-8")
 		title= "SIGSAC | " + name
 		link(rel="stylesheet" type="text/css" href="css/site.css")
-		if locals.stylesheets
-			each stylesheet in stylesheets
-				link(rel="stylesheet" type="text/css" href="#{stylesheet}")
 
 mixin _header(leftSites, rightSites, loggedin)
 	header
 		a(id="logo" href="index")
 			img(src="images/sigsaclogo.png")
 	nav
-		each site in leftSites
-			if site.current == true
-				a(class="page_link current_page" href="#{site.link}") #{site.title}
-			else
-				a(class="page_link" href="#{site.link}") #{site.title}
+		//each site in leftSites
+		//	if site.current == true
+		//		a(class="page_link current_page" href="#{site.link}") #{site.title}
+		//	else
+		//		a(class="page_link" href="#{site.link}") #{site.title}
 		//- each site in rightSites
 		//- 	if site.current == true
 		//- 		a(class="page_link right current_page" href="#{site.link}") #{site.title}

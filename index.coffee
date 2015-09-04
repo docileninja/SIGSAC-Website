@@ -1,43 +1,38 @@
 express = require 'express'
 session = require 'express-session'
+passport = require 'passport'
+flash = require 'connect-flash'
+mongoose = require 'mongoose'
+
+cookieParser = require 'cookie-parser'
+bodyParser = require 'body-parser'
 jade = require 'jade'
 fs = require 'fs'
 logger = require 'morgan'
 
-pages = require __dirname + '/routes/pages.coffee'
-api = require __dirname + '/routes/api.coffee'
-
 app = express()
+
+configDB = require './config/database.coffee'
+mongoose.connect configDB.url
+
+require('./config/passport.coffee')(passport)
 
 app.use "/", express.static __dirname + '/public'
 app.use logger ":remote-addr :method :url     :response-time ms"
+
 app.use session
  	resave: false
  	saveUninitialized: false
  	secret: 'shhhh, very secret'
+app.use passport.initialize()
+app.use passport.session()
+app.use flash()
 
-#pages
-app.get '/', pages.home
-app.get '/index(.html)?', pages.home
-app.get '/about(.html)?', pages.about
-app.get '/lessons(.html)?', pages.lessons
-app.get '/challenges(.html)?', pages.challenges
-app.get '/signup(.html)?', pages.signup
-app.get '/signin(.html)?', pages.signin
+app.use cookieParser()
+app.use bodyParser()
 
-#api
-app.get '/api/getmembers', (req, res) ->
-	api.getMembers (body) -> res.send body
-app.get '/api/getmember', (req, res) ->
-	api.getMember req.query.handle, (body) -> res.send body
-app.get '/api/getchallenges', (req, res) ->
-	api.getChallenges (body) -> res.send body
-app.get '/api/getlastchallenges', (req, res) ->
-	api.getLastXChallenges req.query.count, (body) -> res.send body
-
-#session
-app.post  '/signin', (req, res) -> console.log "signin attempted"
-#app.get('/signout', )
+require('./app/pages.coffee')(app, passport)
+require('./app/api.coffee')(app, passport)
 
 server = app.listen 8080, "localhost", () ->
 	host = server.address().address
