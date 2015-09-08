@@ -1,0 +1,13 @@
+high priority:
+
+add verification for registration
+add validation for registration
+add ability to update profile
+pull lessons from twitch
+ADMIN PANELs
+markdown rendering for editable pages
+use promises for multiple dynamic elements per page
+
+low priority:
+
+add leaderboard

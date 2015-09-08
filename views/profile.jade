@@ -1,0 +1,55 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Profile")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                h1(class="page_title") Profile
+                section(style="padding-left: 2px;")
+                    form(action="/updateprofile" method="POST")
+                        h2 Username
+                        p #{user.handle}
+
+                        h2 Email
+                        p #{user.email}
+
+                        h2 Password
+                        label Old Password:
+                        input(type="password" name="oldpassword")
+                        label New Password:
+                        input(type="password" name="newpassword")
+                        label Reenter New Password:
+                        input(type="password" name="newpasswordcheck")
+
+                        h2 First Name
+                        input(type="text" name="firstname" value="#{user.first_name}")
+
+                        h2 Last Name
+                        input(type="text" name="lastname" value="#{user.last_name}")
+
+                        h2 Phone Number
+                        input(type="text" name="phonenumber" value="#{user.phone}")
+
+                        if user.xnumber
+                            h2 xNumber
+                                input(type="text" name="xnumber" value="#{user.xnumber}")
+
+                            h2 Graduation Year
+                                input(type="text" name="grad_year" value="#{user.grad_year}")
+
+                            h2 Major
+                                input(type="select" name="major" value="#{user.major}")
+
+                        if user.rank
+                            h2 Rank
+                                select(name="rank")
+                                    option(value="#{user.rank}") #{user.rank}
+
+                        div#button_div
+                            input(type="submit" value="Update")
+                    if !user.xnumber && !user.rank
+                        button(onclick="location.href = 'amcadet'") I am a Cadet
+                        button(onclick="location.href = 'amofficer'") I am an Officer
+            +_footer()

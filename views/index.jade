@@ -5,14 +5,15 @@ html(lang="en")
 	+_head("Home")
 	body
 		#site_strip
-			+_header(pagelist.left, pagelist.right, pagelist.loggedin)
+			+_header(loggedin, user)
 			main
+				h1(class="page_title") Home
 				figure
-					a(href="images/teamphoto-large.jpg")
-						img(class="carosel" src="images/teamphoto.jpg")
-					figcaption SIGSAC club photo
+					a(href="/images/teamphoto-large.jpg")
+						img(class="carosel" src="/images/teamphoto.jpg")
+					figcaption SIGSAC Club Photo
 				p.
-					The USMA chapter of SIGSAC is dedicated to the development of future cyber leaders.
+					The USMA chapter of SIGSAC is dedicated to the development of future cyber leaders (of character).
 					In addition to the create of Army Cyber leaders, each SIGSAC meeting is a structured
 					lesson. These lessons, taught by club members, focus on various fields in cyber
 					security such as advanced persistent threats, classic buffer overflows, and amature
@@ -26,9 +27,9 @@ html(lang="en")
 						.challenge
 							h2(class="challenge_title") echo
 							p(class="challenge_description") For this one you should know the basics of a buffer overflow. If you don't know how to perform an attack, that's fine. The goal here is just to crash the program to get the flag. (hint python -c "statement" will execute the statement).
-							a(href="challenges/echo") download
+							a(href="challenges/echo") Download
 						.challenge
 							h2(class="challenge_title") delta
 							p(class="challenge_description") This challenge requires you know a bit about how Linux programs work. It is recommended that you open it in IDA or objdump and look at the assembly for comparisons. Knowing how argc and argv work would also help.
-							a(href="challenges/delta") download
+							a(href="challenges/delta") Download
 			+_footer()

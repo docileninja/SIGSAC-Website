@@ -1,0 +1,12 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Lessons")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                h1(class="page_title") Lessons
+                section
+                    +_lessons(lessons)
+            +_footer()

@@ -1,57 +1,68 @@
-mixin _head(name, stylesheets)
+mixin _head(name)
 	head
 		meta(charset="UTF-8")
 		title= "SIGSAC | " + name
-		link(rel="stylesheet" type="text/css" href="css/site.css")
+		link(rel="stylesheet" type="text/css" href="/css/site.css")
 
-mixin _header(leftSites, rightSites, loggedin)
+mixin _header(loggedin, user)
 	header
-		a(id="logo" href="index")
-			img(src="images/sigsaclogo.png")
+		a(id="logo" href="/")
+			img(src="/images/sigsaclogo.png")
 	nav
-		//each site in leftSites
-		//	if site.current == true
-		//		a(class="page_link current_page" href="#{site.link}") #{site.title}
-		//	else
-		//		a(class="page_link" href="#{site.link}") #{site.title}
-		//- each site in rightSites
-		//- 	if site.current == true
-		//- 		a(class="page_link right current_page" href="#{site.link}") #{site.title}
-		//- 	else
-		//- 		a(class="page_link right" href="#{site.link}") #{site.title}
-		//if loggedin != true
-		//	#login
-		//		a(class="page_link" id="signup" href="signin") signin/
-		//		a(class="page_link" id="signup" href="signup") signup
+		ul
+			li
+				a(class="page_link" href="/") Home
+			li
+				a(class="page_link" href="/lessons") Lessons
+			li
+				a(class="page_link" href="/challenges") Challenges
+			li
+				a(class="page_link" href="/resources") Resources
+			li
+				a(class="page_link" href="/about") About
+
+		if !loggedin
+			ul(style="float: right;")
+				li
+					a(class="page_link" id="signup" href="/login") Login
+				li
+					span /
+				li
+					a(class="page_link" id="signup" href="/signup") Sign up
+		else
+			ul(style="float: right;")
+				li(class="menu")
+					a(class="page_link" href="#") #{user.handle}
+						span(style="font-size: 10px; margin-left: 2px;") &#9660;
+					ul
+						li
+							a(class="page_link" href="/profile") Profile
+						li
+							a(class="page_link" href="/attendance") Attendance
+						li
+							a(class="page_link" href="/leaderboard") Leaderboard
+						if user.position == "Admin"
+							li
+								a(class="page_link" href="/admin") Admin
+						li
+							a(class="page_link" href="/logout") Logout
+
 
 mixin _footer()
 	footer
 		#footer_images
 			a(href="http://www.usma.edu/")
-				img(src="http://www.usma.edu/Style%20Library/WestPoint/Images/wpLogo102.png")
+				img(src="/images/usmalogo.png")
 			a(href="http://www.sigsac.org/")
-				img(src="http://www.sigsac.org/ccs/CCS2014/images/acm_logo.jpg")
-
-//mixin _lessons(lessons)
-//	#lessons
-//		each lesson in lessons
-//			.lesson
-//				h2(class="lesson_title") #{lesson.title}
-//				img(class="lesson_thumb" src="#{lesson.link}")
-//				p(class="lesson_description") #{lesson.description}
+				img(src="/images/acm_logo.jpg")
 
 mixin _lessons(lessons)
 	#lessons
-		.lesson
-			h2(class="lesson_title") Buffer Overflow
-			a(href="https://www.youtube.com/watch?v=ahUBv0Nvk1Y")
-				img(class="lesson_thumb" src="https://i.ytimg.com/vi/ahUBv0Nvk1Y/mqdefault.jpg")
-			p(class="lesson_description") This video can help you learn a little bit more about the mechanics behind buffer overflows. It is relatively in depth and includes good examples.
-		.lesson
-			h2(class="lesson_title") argc/argv
-			a(href="https://www.youtube.com/watch?v=aP1ijjeZc24")
-				img(class="lesson_thumb" src="https://i.ytimg.com/vi_webp/aP1ijjeZc24/mqdefault.webp")
-			p(class="lesson_description") Understanding of argc and argv is critical to any c programming, whether or not it is security related. This video outlines how it works in a program and where each part comes from.
+		each lesson in lessons
+			.lesson
+				h2(class="lesson_title") #{lesson.name}
+				img(class="lesson_thumb" src="#{lesson.link}")
+				p(class="lesson_description") #{lesson.description}
 
 mixin _challenges(challenges)
 	#challenges
@@ -62,3 +73,25 @@ mixin _challenges(challenges)
 				each lesson in lessons
 					a(href="")
 						#{lesson.title}
+
+mixin _admin()
+	h1(class="page_title") Admin Panel
+	aside(class="sidebar")
+		ul
+			li
+				a(href="/admin/home") Home
+			li
+				a(href="/admin/lessons") Lessons
+			li
+				a(href="/admin/challenges") Challenges
+			li
+				a(href="/admin/resources") Resources
+			li
+				a(href="/admin/about") About
+			li
+				a(href="/admin/events") Events
+			li
+				a(href="/admin/uploadimage") Upload Image
+			li
+				a(href="/admin/uploadchallenge") Upload Challenge
+

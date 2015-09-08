@@ -1,0 +1,13 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Admin Panel")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                +_admin()
+                section.content
+                    h2 Welcome
+                    p Do all your admin-y stuff here.
+            +_footer()

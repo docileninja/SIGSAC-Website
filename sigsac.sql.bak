@@ -252,25 +252,28 @@ CREATE TABLE challenge_at_event (
 
 );
 
+CREATE TABLE member_has_certification (
+
+    handle char(32) NOT NULL,
+    certification char(64) NOT NULL,
+    earn_date DATE,
+    exp_date DATE,
+
+    PRIMARY KEY (handle, certification, earn_date),
+    FOREIGN KEY f1(handle) REFERENCES members(handle),
+    FOREIGN KEY f2(certification) REFERENCES certifications(certification_name)
+
+);
+
 -- PAGES
 
 CREATE TABLE resources (
 
-    title char(64) NOT NULL,
+    title char(64)  NULL,
     markdown text,
     html text NOT NULL,
 
     PRIMARY KEY (title)
-
-);
-
-CREATE TABLE pages (
-
-    name char(64) NOT NULL,
-    markdown text,
-    html text NOT NULL,
-
-    PRIMARY KEY (name)
 
 );
 
@@ -317,6 +320,13 @@ INSERT INTO officers (handle, rank) VALUES
     ('uMadSon?','general');
 
 -- MEMBER STUFF
+
+INSERT INTO certifications (certification_name) values
+    ('CISSP'),
+    ('Net+'),
+    ('A+'),
+    ('Sec+'),
+    ('GPEN');
 
 INSERT INTO duty_positions (duty_position) VALUES
     ('CIC'),
@@ -403,3 +413,188 @@ INSERT INTO challenge_for_lesson (challenge, lesson) VALUES
 INSERT INTO challenge_at_event (challenge, event) VALUES
     ("echo", "Shmoocon 10"),
     ("NOP what you expect", "Buffer Overflows 101");
+
+INSERT INTO member_has_certification (handle, certification, earn_date, exp_date) VALUES
+    ('geedubz','CISSP','2001-11-11','2005-11-11'),
+    ('haxor','Net+','1999-12-10','2002-12-10'),
+    ('librarian','GPEN','2012-10-05','2016-10-05');
+
+
+-- -- PROCEDURES
+
+-- DELIMITER $$
+
+-- -- ENTERING INFO
+
+-- CREATE PROCEDURE enterMember (
+-- 	IN who char(32),
+--     IN fname char(32),
+--     IN lname char(32),
+--     IN pnum char(10),
+--     IN email char(32),
+--     IN acm INT,
+--     IN joind DATE
+-- )
+-- BEGIN
+-- 	INSERT INTO member (who, firstName, lastName, phone, email, acmId, joinDate) VALUES
+-- 	(handle,fname,lname,pnum,email,acm,joind);
+-- END $$
+
+-- CREATE PROCEDURE enterEvent (
+-- 	IN name char(32),
+--     IN loc char(32),
+--     IN cat CHAR(16),
+--     IN startd DATE,
+--     IN starts TIME,
+--     IN endd DATE,
+--     IN endt TIME,
+--     IN description TEXT
+-- )
+-- BEGIN
+-- 	INSERT INTO event (eventName, locName, category, startDate, startTime, endDate, endTime, description) VALUES
+-- 	(name,loc,cat,startd,starts,endd,endt,description);
+-- END $$
+
+-- CREATE PROCEDURE enterAttendance (
+-- 	IN who char(32),
+--     IN name char(32),
+--     IN date DATE
+-- )
+-- BEGIN
+-- 	INSERT INTO memberAttendsEvent (handle, eventName) VALUES
+-- 	(who,name,date);
+-- END $$
+
+-- CREATE PROCEDURE enterChallenge (
+-- 	IN name char(32),
+--     IN val INT,
+--     IN startd DATE,
+--     IN cat char(16)
+-- )
+-- BEGIN
+-- 	INSERT INTO challenge (chalName, points, startDate, category) VALUES
+-- 	(name,val,startd,cat);
+-- END $$
+
+-- CREATE PROCEDURE enterChallengeSolve (
+-- 	IN who char(32),
+--     IN chal char(32),
+--     IN solved DATE
+-- )
+-- BEGIN
+-- 	INSERT INTO memberSolvesChallenge (handle, chalName, solveDate) VALUES
+-- 	(who,chal,sovled);
+-- END $$
+
+-- CREATE PROCEDURE enterCertificationEarn (
+-- 	IN who char(32),
+--     IN cert char(64),
+--     IN earned DATE,
+--     IN expires DATE
+-- )
+-- BEGIN
+-- 	INSERT INTO memberHasCert (handle, certName, earnDate, expDate) VALUES
+-- 	(who,cert,earned,expires);
+-- END $$
+
+-- CREATE PROCEDURE enterPosition (
+-- 	IN who char(32),
+--     IN psn char(32),
+--     IN startd DATE,
+--     IN endd DATE
+-- )
+-- BEGIN
+-- 	INSERT INTO memberHoldsPosition (handle, dutyPosition, startDate, endDate) VALUES
+-- 	(who,psn,startd,endd);
+-- END $$
+
+-- -- RETRIEVING INFO
+
+-- CREATE PROCEDURE listScores ()
+-- BEGIN
+-- 	SELECT handle, SUM(points) AS score FROM memberSolvesChallenge, challenge
+--     WHERE memberSolvesChallenge.chalname = challenge.chalName
+--     GROUP BY handle
+--     ORDER BY score DESC;
+-- END $$
+
+-- CREATE PROCEDURE listCadets ()
+-- BEGIN
+-- 	SELECT member.handle, firstName, lastName, email, acmId, joinDate, xNum, gradYear, major
+--     FROM member, cadet
+--     WHERE cadet.handle = member.handle;
+-- END $$
+
+-- CREATE PROCEDURE listOfficers ()
+-- BEGIN
+-- 	SELECT member.handle, rank, firstName, lastName, email, acmId, joinDate
+--     FROM member, officer, memberHasCert
+--     WHERE officer.handle = member.handle;
+-- END $$
+
+-- CREATE PROCEDURE listAttendance (
+-- 	IN eventvar CHAR(32)
+-- )
+-- BEGIN
+-- 	SELECT handle
+--     FROM memberAttendsEvent
+--     WHERE eventName = eventvar
+--     ORDER BY handle;
+-- END $$
+
+-- CREATE PROCEDURE listSolves (
+-- 	IN which char(32)
+-- )
+-- BEGIN
+-- 	SELECT handle, solveDate
+--     FROM memberSolvesChallenge
+--     WHERE chalName = which
+--     ORDER BY solveDate;
+-- END $$
+
+-- CREATE PROCEDURE listLeadership ()
+-- BEGIN
+-- 	SELECT *
+--     FROM memberHoldsPosition
+--     WHERE startDate <= CURDATE() AND endDate >= CURDATE();
+-- END $$
+
+-- DELIMITER ;
+
+
+-- -- USERS
+
+-- DROP USER OIC; FLUSH PRIVILEGES;
+-- CREATE USER OIC IDENTIFIED BY 'oicpass';
+
+-- DROP USER CIC; FLUSH PRIVILEGES;
+-- CREATE USER CIC IDENTIFIED BY 'cicpass';
+
+-- DROP USER XO; FLUSH PRIVILEGES;
+-- CREATE USER XO IDENTIFIED BY 'xopass';
+
+-- DROP USER webApp; FLUSH PRIVILEGES;
+-- CREATE USER webApp IDENTIFIED BY 'webpass';
+
+-- DROP USER OIC; FLUSH PRIVILEGES;
+-- CREATE USER OIC IDENTIFIED BY 'oicpass';
+
+-- DROP USER member; FLUSH PRIVILEGES;
+-- CREATE USER member IDENTIFIED BY '';
+
+
+-- -- PERMISSIONS
+
+-- GRANT EXECUTE ON PROCEDURE listOfficers TO OIC, CIC, XO;
+-- GRANT EXECUTE ON PROCEDURE listCadets TO OIC, CIC, XO;
+-- GRANT EXECUTE ON PROCEDURE listAttendance TO OIC, CIC, XO;
+-- GRANT EXECUTE ON PROCEDURE enterEvent TO OIC, CIC;
+-- GRANT EXECUTE ON PROCEDURE enterPosition TO OIC;
+-- GRANT EXECUTE ON PROCEDURE enterChallenge TO CIC;
+-- GRANT EXECUTE ON PROCEDURE enterMember TO XO;
+-- GRANT EXECUTE ON PROCEDURE enterAttendance TO XO;
+-- GRANT EXECUTE ON PROCEDURE enterCertificationEarn TO XO;
+-- GRANT EXECUTE ON PROCEDURE enterChallengeSolve TO webApp;
+-- GRANT EXECUTE ON PROCEDURE listSolves TO OIC, CIC, XO, member;
+-- GRANT EXECUTE ON PROCEDURE listScores TO OIC, CIC, XO, member;
+-- GRANT EXECUTE ON PROCEDURE listLeadership TO OIC, CIC, XO, member;

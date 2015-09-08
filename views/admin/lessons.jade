@@ -1,0 +1,23 @@
+include ../templates.jade
+doctype html
+html(lang="en")
+    +_head("Admin Panel")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                +_admin()
+                section.content
+                    h2 Lessons
+                    button(onclick="location.href = '/admin/lessons/addlesson/';") Add Lesson
+                    if flash != ""
+                        span.flash #{flash}
+                    #lessons
+                        each lesson in lessons
+                            .lesson
+                                h2(class="lesson_title") #{lesson.name}
+                                img(class="lesson_thumb" src="#{lesson.link}")
+                                p(class="lesson_description") #{lesson.description}
+                                button(onclick="location.href = '/admin/lessons/edit/#{lesson.name}';") Edit
+                                button(onclick="if (confirm('Are you sure you want to delete #{lesson.name}?')) location.href = '/admin/lessons/delete/#{lesson.name}';") Delete
+            +_footer()

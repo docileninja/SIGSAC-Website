@@ -1,0 +1,20 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Challenges")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                h1(class="page_title") Challenges
+                section
+                    #challenges
+                        .challenge
+                            h2(class="challenge_title") echo
+                            p(class="challenge_description") For this one you should know the basics of a buffer overflow. If you don't know how to perform an attack, that's fine. The goal here is just to crash the program to get the flag. (hint python -c "statement" will execute the statement).
+                            a(href="challenges/echo") download
+                        .challenge
+                            h2(class="challenge_title") delta
+                            p(class="challenge_description") This challenge requires you know a bit about how Linux programs work. It is recommended that you open it in IDA or objdump and look at the assembly for comparisons. Knowing how argc and argv work would also help.
+                            a(href="challenges/delta") download
+            +_footer()

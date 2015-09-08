@@ -2,7 +2,7 @@ express = require 'express'
 session = require 'express-session'
 passport = require 'passport'
 flash = require 'connect-flash'
-mongoose = require 'mongoose'
+#mongoose = require 'mongoose'
 
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
@@ -12,8 +12,8 @@ logger = require 'morgan'
 
 app = express()
 
-configDB = require './config/database.coffee'
-mongoose.connect configDB.url
+#configDB = require './config/database.coffee'
+#mongoose.connect configDB.url
 
 require('./config/passport.coffee')(passport)
 
@@ -30,6 +30,8 @@ app.use flash()
 
 app.use cookieParser()
 app.use bodyParser()
+
+app.set 'view engine', 'jade'
 
 require('./app/pages.coffee')(app, passport)
 require('./app/api.coffee')(app, passport)

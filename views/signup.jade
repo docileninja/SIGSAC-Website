@@ -1,25 +1,36 @@
 include ./templates.jade
 doctype html
 html(lang="en")
-    +_head("Sign up", stylesheets)
+    +_head("Sign up")
     body
         #site_strip
-            +_header()
+            +_header(loggedin)
             main
                 section#signin_box
-                    h1 sign up
+                    h1 Sign up
                     section#signin_bottom
                         form(action="/signup" method="POST")
-                            label email:
+                            label Username:
+                            input(type="text" name="handle")
+
+                            label Email:
                             input(type="text" name="email")
-                            br
-                            br
-                            br
-                            label password:
+
+                            label Password:
                             input(type="password" name="password")
-                            br
-                            br
-                            br
+
+                            label First Name:
+                            input(type="text" name="firstname")
+
+                            label Last Name:
+                            input(type="text" name="lastname")
+
+                            label Phone Number:
+                            input(type="text" name="phone")
+
+                            if flash
+                                span.flash #{flash}
+
                             div#button_div
-                                input(type="submit" value="submit")
+                                input(type="submit" value="Submit")
             +_footer()

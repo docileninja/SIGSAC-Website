@@ -1,0 +1,24 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Attendance")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                h1(class="page_title") Attendance
+                section
+                    form(action="/attendance" method="POST")
+                        h2 Check In To Lesson
+
+                        label Code:
+                        input(type="text" name="code")
+
+                        if flash != ""
+                            span.flash #{flash}
+
+                        input(type="submit" value="Submit")
+                if lessons
+                    h2 Lessons Attended
+                    +_lessons(lessons)
+            +_footer()

@@ -1,0 +1,24 @@
+include ./templates.jade
+doctype html
+html(lang="en")
+    +_head("Resources")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                h1(class="page_title") Resources
+                aside(class="sidebar")
+                    ul
+                        each resource in resources
+                            li
+                                a(href="#{resource.link}") #{resource.title}
+                        //li
+                        //    a(href="/resources/gettingstarted") Getting Started
+                        //li
+                        //    a(href="/resources/cprogramming") C Programming
+                        //li
+                        //    a(href="/resources/sqlinjection") SQL Injection
+                section(style="float: left; padding: 0 2.5%; width: 74%;")
+                    h2 #{content.title}
+                    span !{content.html}
+            +_footer()
