@@ -1,5 +1,6 @@
 mysql = require "mysql"
 Q = require "q"
+md = require("markdown").markdown
 
 pool = mysql.createPool
   connectionLimit: 100
@@ -69,6 +70,8 @@ exports.getLesson = (title) ->
       promise.reject 'Lesson with title, ' + title + ', does not exist.'
   promise.promise
 
+## Admin ##
+
 exports.addLesson = (lesson) ->
   promise = Q.defer()
   query "SELECT * FROM lessons WHERE name = ?;", lesson.name
@@ -102,4 +105,21 @@ exports.getPage = (page) ->
       promise.resolve pages[0]
     else
       promise.reject "No page found with name, " + page + "."
+  .catch (err) ->
+    console.log err
+    promise.reject err.message
+  promise.promise
+
+exports.editPage = (page) ->
+  promise = Q.defer()
+  console.log md.toHTML page.markdown
+  query "UPDATE pages SET markdown = ?, html = ? WHERE name = ?;",
+        [page.markdown, md.toHTML(page.markdown), page.name]
+  .then (result) ->
+    console.log result
+    console.log "finished query"
+    if result.rowsAffected
+      promise.resolve null
+    else
+      promise.reject "Page, " + page.name + " does not exist."
   promise.promise

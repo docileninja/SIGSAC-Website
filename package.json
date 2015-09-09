@@ -38,7 +38,7 @@
 
     "q": "*",
     "validator-js": "*",
-    "markdown-js": "*"
+    "markdown": "*"
   },
 
   "private": true,

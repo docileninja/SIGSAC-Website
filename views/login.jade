@@ -10,7 +10,7 @@ html(lang="en")
 				section#signin_box
 					h1 Login
 					section#signin_bottom
-						form(action="/login" method="POST")
+						form(action="/login?url=#{url ? url:'/'}" method="POST")
 							label Email or Username:
 							input(type="text" id="login-field" autofocus="autofocus" name="email")
 

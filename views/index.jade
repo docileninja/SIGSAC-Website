@@ -12,8 +12,7 @@ html(lang="en")
 					a(href="/images/teamphoto-large.jpg")
 						img(class="carosel" src="/images/teamphoto.jpg")
 					figcaption SIGSAC Club Photo
-				p.
-					#{content.html}
+				span !{content.html}
 				section
 					h1 Videos
 					+_lessons(lessons)

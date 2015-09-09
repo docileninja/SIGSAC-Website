@@ -321,7 +321,8 @@ INSERT INTO officers (handle, rank) VALUES
 INSERT INTO duty_positions (duty_position) VALUES
     ('CIC'),
     ('OIC'),
-    ('XO');
+    ('XO'),
+    ('Admin');
 
 -- CHALLENGE STUFF
 
@@ -403,3 +404,14 @@ INSERT INTO challenge_for_lesson (challenge, lesson) VALUES
 INSERT INTO challenge_at_event (challenge, event) VALUES
     ("echo", "Shmoocon 10"),
     ("NOP what you expect", "Buffer Overflows 101");
+
+-- PAGES
+
+INSERT INTO pages (name, html, markdown) VALUES
+    ("Home", "herp", "*sample homepage*"),
+    ("About", "derp", "##sample markdown");
+
+INSERT INTO resources (title, html, markdown) VALUES
+    ("", "<p>This is the main page</p>", "This is the main page"),
+    ("Getting Started", "<p>This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.</p>", "This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.");
+

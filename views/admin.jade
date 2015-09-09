@@ -8,6 +8,8 @@ html(lang="en")
             main
                 +_admin()
                 section.content
+                    if flash
+                        span.flash #{flash}
                     h2 Welcome
                     p Do all your admin-y stuff here.
             +_footer()

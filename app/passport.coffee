@@ -76,6 +76,7 @@ module.exports = (passport) ->
           if !rows.length
             return done null, false, req.flash 'loginMessage', 'Invalid username and/or password.'
           if validatePassword password, rows[0].hash
+            req.flash 'redirect', req.query.url
             return done null, rows[0]
           else
             return done null, false, req.flash 'loginMessage', 'Invalid username and/or password.'

@@ -307,3 +307,10 @@ select
 	padding: 0 2.5%;
 	width: 74%;
 }
+
+#preview
+{
+	border: 1px solid black;
+	padding: 10px;
+	margin: 20px 0;
+}

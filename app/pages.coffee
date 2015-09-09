@@ -45,8 +45,6 @@ module.exports = (app, passport) ->
       else
         res.redirect '/'
 
-
-
   app.get '/resources/:topic', (req, res) ->
     api.getResourceTitles()
     .then (resources) ->
@@ -62,9 +60,12 @@ module.exports = (app, passport) ->
           res.redirect '/resources'
 
   app.get '/about', (req, res) ->
-    res.render "about.jade",
-      loggedin: req.isAuthenticated()
-      user: req.user
+    api.getPage 'About'
+    .then (content) ->
+      res.render "about.jade",
+        loggedin: req.isAuthenticated()
+        user: req.user
+        content: content
 
   ## MEMBER PAGES ##
 
@@ -142,14 +143,61 @@ module.exports = (app, passport) ->
         loggedin: true
         user: req.user
         lesson: lesson
-    .catch (err) ->
-      req.flash 'lessonMessage', err
+    .catch (errorMessage) ->
+      req.flash 'lessonMessage', errorMessage
       res.redirect '/admin/lessons'
 
   app.get '/admin/lessons/delete/:title', isLoggedIn, isAdmin, (req, res) ->
     api.deleteLesson req.params.title
     .then () ->
       res.redirect '/admin/lessons'
+
+  app.get '/admin/home', isLoggedIn, isAdmin, (req, res) ->
+    api.getPage "Home"
+    .then (home) ->
+      res.render 'admin/editpage',
+        loggedin: true
+        user: req.user
+        page: home
+        flash: req.flash 'editHomeMessage'
+    .catch (errorMessage) ->
+      req.flash 'adminMessage', errorMessage
+      res.redirect '/admin'
+
+  app.post '/admin/home', isLoggedIn, isAdmin, (req, res) ->
+    home = req.body
+    home.name = "Home"
+    api.editPage home
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'editHomeMessage', errorMessage
+    .finally () ->
+      res.redirect '/admin/home'
+
+  app.get '/admin/about', isLoggedIn, isAdmin, (req, res) ->
+    api.getPage "about"
+    .then (about) ->
+      res.render 'admin/editpage',
+        loggedin: true
+        user: req.user
+        page: about
+        flash: req.flash 'editPageMessage'
+    .catch (errorMessage) ->
+      req.flash 'adminMessage', errorMessage
+      res.redirect '/admin'
+
+  app.post '/admin/about', isLoggedIn, isAdmin, (req, res) ->
+    about = req.body
+    about.name = "About"
+    api.editPage about
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'editAboutMessage', errorMessage
+    .finally () ->
+      res.redirect '/admin/about'
+
 
   ## AUTHENTICATION ##
 
@@ -166,12 +214,13 @@ module.exports = (app, passport) ->
 	app.get '/login', kickLoggedIn, (req, res) ->
     res.render "login.jade",
       flash: req.flash 'loginMessage'
+      url: req.query.url
 
-	app.post '/login', passport.authenticate 'local-login', {
-		successRedirect: '/'
+	app.post '/login', passport.authenticate('local-login',
 		failureRedirect: '/login'
-		failureFlash: true
-	}
+		failureFlash: true),
+    (req, res) ->
+      res.redirect req.flash('redirect')
 
 	app.get '/logout', (req, res) ->
 		req.logout()
@@ -184,8 +233,8 @@ isLoggedIn = (req, res, next) ->
   if req.isAuthenticated()
     return next()
   else
-    req.flash 'loginMessage', 'You must be logged in to view that page.'
-    res.redirect '/login'
+    req.flash 'loginMessage', 'You must be logged in to view that page. ' + req.originalUrl
+    res.redirect '/login?url=' + req.originalUrl
 
 kickLoggedIn = (req, res, next) ->
   if req.isAuthenticated()
