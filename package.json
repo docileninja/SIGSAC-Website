@@ -29,13 +29,16 @@
 
     "jade": "*",
 	"mysql": "*",
-    "mongoose" : "~3.8.1",
 	"morgan": "*",
     "pm2": "*",
 
     "body-parser": "~1.0.0",
     "cookie-parser": "~1.0.0",
-    "method-override": "~1.0.0"
+    "method-override": "~1.0.0",
+
+    "q": "*",
+    "validator-js": "*",
+    "markdown-js": "*"
   },
 
   "private": true,

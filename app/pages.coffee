@@ -1,20 +1,26 @@
-jade = require 'jade'
-queries = require './queries.coffee'
-fs = require 'fs'
+api = require './queries.coffee'
 
 module.exports = (app, passport) ->
 
   ## GENERAL PAGES ##
 
 	app.get '/', (req, res) ->
-		queries.getLessons (lessons) ->
-			res.render "index.jade",
-        lessons: lessons
-        loggedin: req.isAuthenticated()
-        user: req.user
+    api.getPage 'home'
+    .then (content) ->
+      api.getLessons()
+      .then (lessons) ->
+        api.getChallenges()
+          .then (challenges) ->
+            res.render "index.jade",
+              lessons: lessons
+              challenges: challenges
+              content: content
+              loggedin: req.isAuthenticated()
+              user: req.user
 
 	app.get '/lessons', (req, res) ->
-    queries.getLessons (lessons) ->
+    api.getLessons()
+    .then (lessons) ->
       res.render "lessons.jade",
         lessons: lessons
         loggedin: req.isAuthenticated()
@@ -26,26 +32,34 @@ module.exports = (app, passport) ->
       user: req.user
 
   app.get '/resources', (req, res) ->
-    queries.getResources '', (success, resources, content) ->
-      if success
-        res.render "resources.jade",
-          loggedin: req.isAuthenticated()
-          user: req.user
-          resources: resources
-          content: content
+    api.getResource ''
+    .then (content) ->
+      if content.length
+        api.getResourceTitles()
+        .then (resources) ->
+          res.render "resources.jade",
+            loggedin: req.isAuthenticated()
+            user: req.user
+            resources: resources
+            content: content[0]
       else
         res.redirect '/'
 
+
+
   app.get '/resources/:topic', (req, res) ->
-    queries.getResources req.params.topic, (success, resources, content) ->
-      if success
-        res.render "resources.jade",
-          loggedin: req.isAuthenticated()
-          user: req.user
-          resources: resources
-          content: content
-      else
-        res.redirect '/resources'
+    api.getResourceTitles()
+    .then (resources) ->
+      api.getResource req.params.topic
+      .then (content) ->
+        if content.length
+          res.render "resources.jade",
+            loggedin: req.isAuthenticated()
+            user: req.user
+            resources: resources
+            content: content[0]
+        else
+          res.redirect '/resources'
 
   app.get '/about', (req, res) ->
     res.render "about.jade",
@@ -63,7 +77,8 @@ module.exports = (app, passport) ->
     res.send 'not yet implemented'
 
   app.get '/attendance', isLoggedIn, (req, res) ->
-    queries.getAttendanceForMember req.user.handle, (lessons) ->
+    api.getAttendanceForMember req.user.handle
+    .then (lessons) ->
       res.render "attendance.jade",
         lessons: lessons
         loggedin: true
@@ -71,17 +86,22 @@ module.exports = (app, passport) ->
         flash: req.flash 'attendanceMessage'
 
   app.post '/attendance', isLoggedIn, (req, res) ->
-    queries.checkIn req.user.handle, req.body.code, (success) ->
-      if !success
-        req.flash 'attendanceMessage', 'Code does not correspond to any lesson'
+    api.checkIn req.user.handle, req.body.code
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'attendanceMessage', errorMessage
+    .finally () ->
       res.redirect '/attendance'
 
   app.get '/amcadet', isLoggedIn, notCadet, notOfficer, (req, res) ->
-    queries.makeCadet req.user.handle, () ->
+    api.makeCadet req.user.handle
+    .then () ->
       res.redirect '/profile'
 
   app.get '/amofficer', isLoggedIn, notCadet, notOfficer, (req, res) ->
-    queries.makeOfficer req.user.handle, () ->
+    api.makeOfficer req.user.handle
+    .then () ->
       res.redirect '/profile'
 
   ## ADMIN ##
@@ -92,7 +112,8 @@ module.exports = (app, passport) ->
       user: req.user
 
   app.get '/admin/lessons', isLoggedIn, isAdmin, (req, res) ->
-    queries.getLessons (lessons) ->
+    api.getLessons()
+    .then (lessons) ->
       res.render 'admin/lessons',
         lessons: lessons
         loggedin: true
@@ -106,24 +127,28 @@ module.exports = (app, passport) ->
 
   app.post '/admin/lessons/addlesson', isLoggedIn, isAdmin, (req, res) ->
     lesson = req.body
-    queries.addLesson lesson, (success) ->
-      if !success
-        req.flash 'lessonMessage', 'Lesson with same title already exists.'
+    api.addLesson lesson
+    .then () ->
+      undefined
+    .catch (errorMessage) -> # , (err) ->  would also work
+      req.flash 'lessonMessage', 'Lesson with same title already exists.'
+    .finally () ->
       res.redirect '/admin/lessons'
 
   app.get '/admin/lessons/edit/:title', isLoggedIn, isAdmin, (req, res) ->
-    queries.getLesson req.params.title, (success, lesson) ->
-      if success
-        res.render 'admin/editlesson',
-          loggedin: true
-          user: req.user
-          lesson: lesson
-      else
-        req.flash 'lessonMessage', 'Lesson with title, ' + req.params.title + ', does not exist.'
-        res.redirect '/admin/lessons'
+    api.getLesson req.params.title
+    .then (lesson) ->
+      res.render 'admin/editlesson',
+        loggedin: true
+        user: req.user
+        lesson: lesson
+    .catch (err) ->
+      req.flash 'lessonMessage', err
+      res.redirect '/admin/lessons'
 
   app.get '/admin/lessons/delete/:title', isLoggedIn, isAdmin, (req, res) ->
-    queries.deleteLesson req.params.title, () ->
+    api.deleteLesson req.params.title
+    .then () ->
       res.redirect '/admin/lessons'
 
   ## AUTHENTICATION ##

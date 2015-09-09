@@ -2,20 +2,13 @@ express = require 'express'
 session = require 'express-session'
 passport = require 'passport'
 flash = require 'connect-flash'
-#mongoose = require 'mongoose'
-
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
-jade = require 'jade'
-fs = require 'fs'
 logger = require 'morgan'
 
 app = express()
 
-#configDB = require './config/database.coffee'
-#mongoose.connect configDB.url
-
-require('./config/passport.coffee')(passport)
+require('./app/passport.coffee')(passport)
 
 app.use "/", express.static __dirname + '/public'
 app.use logger ":remote-addr :method :url     :response-time ms"

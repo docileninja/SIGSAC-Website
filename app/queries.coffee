@@ -1,150 +1,105 @@
 mysql = require "mysql"
+Q = require "q"
 
 pool = mysql.createPool
-  connectionLimit: 100,
+  connectionLimit: 100
   host: "localhost"
   user: "sigsac"
   password: "sigsac"
   database: "sigsac"
 
+## Bind query into promise logic ##
+query = (queryString, args) ->
+  promise = Q.defer()
+  pool.getConnection (err, conn) ->
+    if err
+      promise.reject(err)
+    else
+      conn.query queryString, args, (err, result) ->
+        if err
+          promise.reject(err)
+        else
+          promise.resolve(result)
+  promise.promise
+
 ###MEMBER###
 
-exports.getLessons = (done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT name, description, image_link AS link FROM lessons ORDER BY on_date DESC;", (err, lessons) ->
-      conn.release()
-      done lessons
+exports.getLessons = () ->
+  query "SELECT name, description, image_link AS link FROM lessons ORDER BY on_date DESC;"
 
-exports.getAttendanceForMember = (handle, done) ->
-	pool.getConnection (err, conn) ->
-		conn.query "SELECT name, description, image_link AS link FROM lessons
-                INNER JOIN member_attends_lesson AS atten ON atten.lesson = lessons.name
-                WHERE atten.handle = ? ORDER BY on_date DESC;", handle, (err, lessons) ->
-			conn.release()
-			done lessons
+exports.getAttendanceForMember = (handle) ->
+  query "SELECT name, description, image_link AS link FROM lessons
+         INNER JOIN member_attends_lesson AS atten ON atten.lesson = lessons.name
+         WHERE atten.handle = ? ORDER BY on_date DESC;", handle
 
-exports.checkIn = (handle, code, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT name FROM lessons WHERE code = ?;", code, (err, rows) ->
-      if rows.length
-        conn.query "INSERT INTO member_attends_lesson (handle, lesson) VALUES (?, ?);", [handle, rows[0].name], (err, result) ->
-          conn.release()
-          return done true
-      else
-        conn.release()
-        return done false
+exports.checkIn = (handle, code) ->
+  promise = Q.defer()
+  query "SELECT name FROM lessons WHERE code = ?;", code
+  .then (matches) ->
+    if matches.length != 0
+      query "INSERT INTO member_attends_lesson (handle, lesson) VALUES (?, ?);", [handle, matches[0].name]
+      .then (results) ->
+        promise.resolve null
+    else
+      promise.reject 'Code does not correspond to any lesson'
+  promise.promise
 
-exports.getChallenges = (done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT * FROM challenges;", (err, rows) ->
-      conn.release()
-      done rows
+exports.getChallenges = () ->
+  query "SELECT * FROM challenges;"
 
-exports.makeCadet = (handle, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "INSERT INTO cadets (handle, xnumber, grad_year, major) VALUES (?, '#####', '####', 'No major');", handle, (err, result) ->
-      conn.release()
-      done result
+exports.makeCadet = (handle) ->
+  query "INSERT INTO cadets (handle, xnumber, grad_year, major) VALUES (?, '#####', '####', 'No major');", handle
 
-exports.makeOfficer = (handle, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "INSERT INTO officers (handle, rank) VALUES (?, 'Colonel');", handle, (err, result) ->
-      conn.release()
-      done result
+exports.makeOfficer = (handle) ->
+  query "INSERT INTO officers (handle, rank) VALUES (?, 'Colonel');", handle
 
-exports.getResources = (page, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT title, CONCAT('/resources/', LCASE(REPLACE(title, ' ', ''))) AS link FROM resources WHERE title != 'main';", (err, resources) ->
-      conn.query "SELECT title, html FROM resources WHERE LCASE(REPLACE(title, ' ', '')) = ?;", page, (err, content) ->
-        conn.release()
-        if content.length != 0
-          done true, resources, content[0]
-        else
-          done false, null, null
+exports.getResourceTitles = () ->
+  query "SELECT title, CONCAT('/resources/', LCASE(REPLACE(title, ' ', ''))) AS link FROM resources WHERE title != 'main';"
 
-exports.getLesson = (title, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT * FROM lessons WHERE name = ?;", title, (err, rows) ->
-      conn.release()
-      if rows.length == 0
-        done false, null
-      else
-        done true, rows[0]
+exports.getResource = (page) ->
+  query "SELECT title, html FROM resources WHERE LCASE(REPLACE(title, ' ', '')) = ?;", page
 
-exports.addLesson = (lesson, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "SELECT * FROM lessons WHERE name = ?;", lesson.name, (err, rows) ->
-      if rows.length != 0
-        conn.release()
-        done false
-      else
-        conn.query "INSERT INTO lessons (name, description, html_description, image_link, video_link, on_date, code)
-                    VALUES (?, ?, ?, ?, ?, CURDATE(), ?);", [lesson.name, lesson.description, lesson.html_description, lesson.image_link, lesson.video_link, lesson.code], (err, result) ->
-          conn.release()
-          done true
+exports.getLesson = (title) ->
+  promise = Q.defer()
+  query "SELECT * FROM lessons WHERE name = ?;", title
+  .then (lessons) ->
+    if lessons.length
+      promise.resolve lessons[0]
+    else
+      promise.reject 'Lesson with title, ' + title + ', does not exist.'
+  promise.promise
 
-exports.deleteLesson = (title, done) ->
-  pool.getConnection (err, conn) ->
-    conn.query "DELETE FROM challenge_for_lesson WHERE lesson = ?;", title, (err, res1) ->
-      conn.query "DELETE FROM member_attends_lesson WHERE lesson = ?;", title, (err, res2) ->
-        conn.query "DELETE FROM lessons WHERE name = ?;", title, (err, res3) ->
-          conn.release()
-          done [res1, res2, res3]
+exports.addLesson = (lesson) ->
+  promise = Q.defer()
+  query "SELECT * FROM lessons WHERE name = ?;", lesson.name
+  .then (rows) ->
+    if rows.length
+      promise.reject 'Lesson with same title already exists.'
+    else
+      query "INSERT INTO lessons (name, description, html_description, image_link, video_link, on_date, code)
+             VALUES (?, ?, ?, ?, ?, CURDATE(), ?);",
+        [lesson.name, lesson.description, lesson.html_description, lesson.image_link, lesson.video_link, lesson.code]
+      .then () ->
+        promise.resolve null
+  promise.promise
 
-#exports.getMembers = (fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT * FROM members;", (err, rows) ->
-#			conn.release()
-#			fn rows
-#
-#exports.getMember = (handle, fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT * FROM members WHERE handle = '" + handle + "';", (err, rows) ->
-#			conn.release()
-#			fn rows[0]
-#
+exports.deleteLesson = (title) ->
+  promise = Q.defer()
+  query "DELETE FROM challenge_for_lesson WHERE lesson = ?;", title
+  .then () ->
+    query "DELETE FROM member_attends_lesson WHERE lesson = ?;", title
+    .then () ->
+      query "DELETE FROM lessons WHERE name = ?;", title
+      .then () ->
+        promise.resolve null
+  promise.promise
 
-#
-#exports.getLastXChallenges = (n, fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT * FROM challenges LIMIT " + n + ";", (err, rows) ->
-#			conn.release()
-#			fn rows
-#
-#exports.getLessons = (fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT lesson_name AS title, description, image_link AS link FROM lessons ORDER BY on_date DESC;", (err, rows) ->
-#			conn.release()
-#			fn rows
-#
-#exports.getLastXLessons = (n, fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT lesson_name AS title, description, image_link AS link FROM lessons ORDER BY on_date DESC LIMIT " + n + ";", (err, rows) ->
-#			conn.release()
-#			fn rows
-#
-####STAFF###
-#
-#exports.getAllMembersAttendance = (fn) ->
-#	pool.getConnection (err, conn) ->
-#		conn.query "SELECT DISTINCT handle FROM member_attends_lesson;", (err, members) ->
-#			conn.release()
-#			fn (member["handle"] for member in members)
-#
-#
-#exports.addChallenge = (title, file, desc, lessonIDs) ->
-#	#derp
-#
-#exports.addLesson = (title, link, desc) ->
-#	#pass
-#
-####ADMIN###
-#
-#exports.addEvent = () ->
-#	#pass
-#
-#exports.deleteEvent = () ->
-#	#pass
-#
-#exports.deleteUser = (memberID) ->
-#	#derp
+exports.getPage = (page) ->
+  promise = Q.defer()
+  query "SELECT * FROM pages WHERE name = ?;", page
+  .then (pages) ->
+    if pages.length
+      promise.resolve pages[0]
+    else
+      promise.reject "No page found with name, " + page + "."
+  promise.promise
