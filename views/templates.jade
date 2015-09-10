@@ -8,6 +8,7 @@ mixin _header(loggedin, user)
 	header
 		a(id="logo" href="/")
 			img(src="/images/sigsaclogo.png")
+	hr
 	nav
 		ul
 			li
@@ -44,6 +45,7 @@ mixin _header(loggedin, user)
 								a(class="page_link" href="/admin") Admin
 						li
 							a(class="page_link" href="/logout") Logout
+	hr
 
 
 mixin _footer()
@@ -54,13 +56,18 @@ mixin _footer()
 			a(href="http://www.sigsac.org/")
 				img(src="/images/acm_logo.jpg")
 
+mixin _lesson(lesson)
+	.lesson
+		h2(class="lesson_title") #{lesson.name}
+		a(class="video_link" href="#{lesson.video_link}")
+			img(class="lesson_thumb" src="#{lesson.image_link}")
+		span(class="lesson_description") !{lesson.description}
+
 mixin _lessons(lessons)
 	#lessons
 		each lesson in lessons
-			.lesson
-				h2(class="lesson_title") #{lesson.name}
-				img(class="lesson_thumb" src="#{lesson.link}")
-				p(class="lesson_description") #{lesson.description}
+			+_lesson(lesson)
+
 
 mixin _challenges(challenges)
 	#challenges
@@ -86,8 +93,8 @@ mixin _admin()
 				a(href="/admin/resources") Resources
 			li
 				a(href="/admin/about") About
-			li
-				a(href="/admin/events") Events
+			//li
+			//	a(href="/admin/events") Events
 			li
 				a(href="/admin/uploadimage") Upload Image
 			li

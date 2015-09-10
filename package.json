@@ -38,7 +38,8 @@
 
     "q": "*",
     "validator-js": "*",
-    "markdown": "*"
+    "markdown": "*",
+    "connect-multiparty": "*"
   },
 
   "private": true,

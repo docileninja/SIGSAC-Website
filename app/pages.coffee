@@ -1,4 +1,12 @@
 api = require './queries.coffee'
+upload = require('connect-multiparty')()
+fs = require 'fs'
+Q = require 'q'
+
+readDir = Q.denodeify(fs.readdir)
+readFile = Q.denodeify(fs.readFile)
+writeFile = Q.denodeify(fs.writeFile)
+unlink = Q.denodeify(fs.unlink)
 
 module.exports = (app, passport) ->
 
@@ -128,13 +136,17 @@ module.exports = (app, passport) ->
 
   app.post '/admin/lessons/addlesson', isLoggedIn, isAdmin, (req, res) ->
     lesson = req.body
-    api.addLesson lesson
-    .then () ->
-      undefined
-    .catch (errorMessage) -> # , (err) ->  would also work
-      req.flash 'lessonMessage', 'Lesson with same title already exists.'
-    .finally () ->
+    if !lesson.length
       res.redirect '/admin/lessons'
+    else
+      api.addLesson lesson
+      .then () ->
+        undefined
+      .catch (errorMessage) -> # , (err) ->  would also work
+        console.log errorMessage
+        req.flash 'lessonMessage', 'Lesson with same title already exists.'
+      .finally () ->
+        res.redirect '/admin/lessons'
 
   app.get '/admin/lessons/edit/:title', isLoggedIn, isAdmin, (req, res) ->
     api.getLesson req.params.title
@@ -145,6 +157,17 @@ module.exports = (app, passport) ->
         lesson: lesson
     .catch (errorMessage) ->
       req.flash 'lessonMessage', errorMessage
+      res.redirect '/admin/lessons'
+
+  app.post '/admin/lessons/edit/:title', isLoggedIn, isAdmin, (req, res) ->
+    lesson = req.body
+    lesson.name = req.params.title
+    api.editLesson lesson
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'lessonMessage', errorMessage
+    .finally () ->
       res.redirect '/admin/lessons'
 
   app.get '/admin/lessons/delete/:title', isLoggedIn, isAdmin, (req, res) ->
@@ -197,6 +220,59 @@ module.exports = (app, passport) ->
       req.flash 'editAboutMessage', errorMessage
     .finally () ->
       res.redirect '/admin/about'
+
+  app.get '/admin/uploadimage', isLoggedIn, isAdmin, (req, res) ->
+    readDir __dirname + "/../public/images/uploads"
+    .then (files) ->
+      res.render 'admin/imageupload',
+        user: req.user
+        loggedin: true
+        images: files
+
+  app.post '/admin/uploadimage', isLoggedIn, isAdmin, upload, (req, res) ->
+    newPath = __dirname + "/../public/images/uploads/" + req.files.image.originalFilename
+    readFile req.files.image.path
+    .then (file) ->
+      writeFile newPath, file
+      .then () ->
+        undefined
+      .catch (err) ->
+        console.log err
+      .finally () ->
+        res.redirect '/admin/uploadimage'
+
+  app.get '/admin/uploadchallenge', isLoggedIn, isAdmin, (req, res) ->
+    console.log __dirname + "/../public/challenges"
+    readDir __dirname + "/../public/challenges"
+    .then (files) ->
+      console.log files
+      res.render 'admin/challengeupload',
+        user: req.user
+        loggedin: true
+        files: files
+
+  app.post '/admin/uploadchallenge', isLoggedIn, isAdmin, upload, (req, res) ->
+    newPath = __dirname + "/../public/challenges/" + req.files.image.originalFilename
+    readFile req.files.image.path
+    .then (file) ->
+      writeFile newPath, file
+      .then () ->
+        undefined
+      .catch (err) ->
+        console.log err
+      .finally () ->
+        res.redirect '/admin/uploadchallenge'
+
+  app.post '/admin/deletefile', isLoggedIn, isAdmin, (req, res) ->
+    file = req.body.file
+    path = __dirname + "/../public/" + file
+    unlink path
+    .then () ->
+      undefined
+    .catch (err) ->
+      console.log err
+    .finally () ->
+      res.redirect '/admin'
 
 
   ## AUTHENTICATION ##

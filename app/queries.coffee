@@ -26,10 +26,10 @@ query = (queryString, args) ->
 ###MEMBER###
 
 exports.getLessons = () ->
-  query "SELECT name, description, image_link AS link FROM lessons ORDER BY on_date DESC;"
+  query "SELECT name, description, image_link, video_link FROM lessons ORDER BY on_date DESC;"
 
 exports.getAttendanceForMember = (handle) ->
-  query "SELECT name, description, image_link AS link FROM lessons
+  query "SELECT name, description, image_link, video_link FROM lessons
          INNER JOIN member_attends_lesson AS atten ON atten.lesson = lessons.name
          WHERE atten.handle = ? ORDER BY on_date DESC;", handle
 
@@ -79,11 +79,28 @@ exports.addLesson = (lesson) ->
     if rows.length
       promise.reject 'Lesson with same title already exists.'
     else
-      query "INSERT INTO lessons (name, description, html_description, image_link, video_link, on_date, code)
+      query "INSERT INTO lessons (name, markdown, description, image_link, video_link, on_date, code)
              VALUES (?, ?, ?, ?, ?, CURDATE(), ?);",
-        [lesson.name, lesson.description, lesson.html_description, lesson.image_link, lesson.video_link, lesson.code]
+        [lesson.name, lesson.markdown, md.toHTML(lesson.markdown), lesson.image_link, lesson.video_link, lesson.code]
       .then () ->
         promise.resolve null
+      .catch (err) ->
+        promise.reject err.message
+  promise.promise
+
+exports.editLesson = (lesson) ->
+  promise = Q.defer()
+  query "SELECT * FROM lessons WHERE name = ?;", lesson.name
+  .then (rows) ->
+    if rows.length
+      query "UPDATE lessons SET markdown = ?, description = ?, image_link = ?, video_link = ?, code = ? WHERE name = ?",
+            [lesson.markdown, md.toHTML(lesson.markdown), lesson.image_link, lesson.video_link, lesson.code, lesson.name]
+      .then () ->
+        promise.resolve null
+      .catch () ->
+        promise.reject "Error updating lesson"
+    else
+      promise.reject "Error, lesson does not exist."
   promise.promise
 
 exports.deleteLesson = (title) ->
@@ -112,12 +129,9 @@ exports.getPage = (page) ->
 
 exports.editPage = (page) ->
   promise = Q.defer()
-  console.log md.toHTML page.markdown
   query "UPDATE pages SET markdown = ?, html = ? WHERE name = ?;",
         [page.markdown, md.toHTML(page.markdown), page.name]
   .then (result) ->
-    console.log result
-    console.log "finished query"
     if result.rowsAffected
       promise.resolve null
     else

@@ -13,11 +13,8 @@ html(lang="en")
                         h3 Title
                         input(type="text" name="name")
 
-                        h3 Description
-                        textarea(name="description" style="height: 200px;")
-
-                        h3 HTML Description
-                        textarea(name="html_description" style="height: 200px;")
+                        h3 Markdown Description
+                        textarea(name="markdown" style="height: 200px;")
 
                         h3 Image Link
                         input(type="text" name="image_link")
@@ -30,3 +27,5 @@ html(lang="en")
 
                         input(type="submit" value="Add Lesson")
             +_footer()
+    script(src="/lib/markdown.js")
+    script(src="/lib/lesson-preview.js")

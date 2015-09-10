@@ -9,18 +9,26 @@ html(lang="en")
                 +_admin()
                 section.content
                     h2 Edit Lesson
-                    form(action="/admin/lessons/editlesson/#{lesson.name}" method="POST")
+                    form(action="/admin/lessons/edit/#{lesson.name}" method="POST")
                         h3 Title
                         p #{lesson.name}
-                        h3 Description
-                        textarea(name="description" style="height: 200px;") #{lesson.description}
-                        h3 HTML Description
-                        textarea(name="html_description" style="height: 200px;") #{lesson.html_description}
+
+                        h3 Markdown Description
+                        textarea(name="markdown" style="height: 200px;" id="description") #{lesson.markdown}
+
                         h3 Image Link
-                        input(type="text" name="image_link" value="#{lesson.image_link}")
+                        input(type="text" name="image_link" value="#{lesson.image_link}" id="image_link")
+
                         h3 Video Link
-                        input(type="text" name="video_link" value="#{lesson.video_link}")
+                        input(type="text" name="video_link" value="#{lesson.video_link}" id="video_link")
+
+                        h3 Preview
+                        #preview
+                            +_lesson(lesson)
+
                         h3 Code
                         input(type="text" name="code" value="#{lesson.code}")
                         input(type="submit" value="Update Lesson")
             +_footer()
+    script(src="/lib/markdown.js")
+    script(src="/lib/lesson-preview.js")
