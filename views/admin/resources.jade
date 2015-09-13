@@ -1,0 +1,26 @@
+include ../templates.jade
+doctype html
+html(lang="en")
+    +_head("Admin Panel")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                +_admin()
+                section.content
+                    h2 Resources
+                    button(onclick="location.href = '/admin/resources/addresource/';") Add Resource
+                    if flash != ""
+                        span.flash #{flash}
+                    #lessons
+                        each resource in resources
+                            div(style="width:100%; overflow:auto;")
+                                if resource.title == ""
+                                    span Landing Page
+                                else
+                                    span #{resource.title}
+                                a(href="/admin/resources/edit/#{resource.title}")
+                                    button(style="float:right; margin:0;" onclick="") Edit
+                                a(href="/admin/resources/delete/#{resource.title}")
+                                    button(style="float:right; margin:0;" onclick="return confirm('Are you sure you want to delete #{resource.link}?');") Delete
+            +_footer()

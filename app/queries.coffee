@@ -55,10 +55,62 @@ exports.makeOfficer = (handle) ->
   query "INSERT INTO officers (handle, rank) VALUES (?, 'Colonel');", handle
 
 exports.getResourceTitles = () ->
-  query "SELECT title, CONCAT('/resources/', LCASE(REPLACE(title, ' ', ''))) AS link FROM resources WHERE title != 'main';"
+  query "SELECT title FROM resources;-- ORDER BY rank;"
 
 exports.getResource = (page) ->
-  query "SELECT title, html FROM resources WHERE LCASE(REPLACE(title, ' ', '')) = ?;", page
+  promise = Q.defer()
+  query "SELECT title, markdown, html FROM resources WHERE title = ?;", page.title
+  .then (rows) ->
+    if rows.length
+      promise.resolve rows[0]
+    else
+      promise.reject "No page matching " + page.title + "."
+  .catch (err) ->
+    promise.reject err.message
+  promise.promise
+
+exports.addResource = (page) ->
+  promise = Q.defer()
+  query "SELECT * FROM resources WHERE title = ?;", page.title
+  .then (results) ->
+    if results.length
+      promise.reject 'Resource with title, ' + page.title + ' already exists.'
+    else
+      query "INSERT INTO resources (title, markdown, html) VALUES (?, ?, ?);",
+            [page.title, page.markdown, md.toHTML(page.markdown)]
+      .then () ->
+        promise.resolve null
+      .catch (error) ->
+        promise.reject error.message
+  .catch (error) ->
+    promise.reject error.message
+  promise.promise
+
+exports.editResource = (page) ->
+  promise = Q.defer()
+  query "SELECT title FROM resources WHERE title = ?;", page.title
+  .then (results) ->
+    if results.length != 0
+      query "UPDATE resources SET markdown = ?, html = ? WHERE title = ?;",
+            [page.markdown, md.toHTML(page.markdown), page.title]
+      .then () ->
+        promise.resolve null
+      .catch (error) ->
+        promise.reject error.message
+    else
+      promise.reject "No resource " + page.title + "."
+  .catch (error) ->
+    promise.reject error.message
+  promise.promise
+
+exports.deleteResource = (page) ->
+  promise = Q.defer()
+  query "DELETE FROM resources WHERE title = ?;", page.title
+  .then () ->
+    promise.resolve null
+  .catch (err) ->
+    promise.reject err.message
+  promise.promise
 
 exports.getLesson = (title) ->
   promise = Q.defer()
@@ -93,7 +145,7 @@ exports.editLesson = (lesson) ->
   query "SELECT * FROM lessons WHERE name = ?;", lesson.name
   .then (rows) ->
     if rows.length
-      query "UPDATE lessons SET markdown = ?, description = ?, image_link = ?, video_link = ?, code = ? WHERE name = ?",
+      query "UPDATE lessons SET markdown = ?, description = ?, image_link = ?, video_link = ?, code = ? WHERE name = ?;",
             [lesson.markdown, md.toHTML(lesson.markdown), lesson.image_link, lesson.video_link, lesson.code, lesson.name]
       .then () ->
         promise.resolve null

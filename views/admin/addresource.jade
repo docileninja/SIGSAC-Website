@@ -1,0 +1,22 @@
+include ../templates.jade
+doctype html
+html(lang="en")
+    +_head("Admin Panel")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                +_admin()
+                section.content
+                    h2 Add Resource
+                    form(action="/admin/resources/addresource" method="POST")
+                        h3 Title
+                        input(type="text" name="title")
+                        h3 Markdown
+                        textarea(name="markdown" style="height: 200px;" id="input")
+                        h3 Preview
+                        div#preview
+                        input(type="submit" value="Add Resource")
+            +_footer()
+    script(src="/lib/markdown.js")
+    script(src="/lib/preview.js")

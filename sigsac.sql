@@ -14,7 +14,7 @@ CREATE TABLE members (
     acm_id INT,
     join_date DATE NOT NULL,
 
-    hash char(60),
+    hash char(60) NOT NULL,
 
     PRIMARY KEY (handle)
 
@@ -169,11 +169,11 @@ CREATE TABLE events (
 CREATE TABLE lessons (
 
     name char(32) NOT NULL,
-    html_description TEXT,
-    description TEXT,
-    image_link char(255),
-    video_link char(255),
-    on_date DATE,
+    markdown text NOT NULL,
+    description text NOT NULL,
+    image_link char(255) NOT NULL,
+    video_link char(255) NOT NULL,
+    on_date date NOT NULL,
     code char(32),
 
     PRIMARY KEY (name)
@@ -257,8 +257,9 @@ CREATE TABLE challenge_at_event (
 CREATE TABLE resources (
 
     title char(64) NOT NULL,
-    markdown text,
+    markdown text NOT NULL,
     html text NOT NULL,
+    rank int NOT NULL,
 
     PRIMARY KEY (title)
 
@@ -267,7 +268,7 @@ CREATE TABLE resources (
 CREATE TABLE pages (
 
     name char(64) NOT NULL,
-    markdown text,
+    markdown text NOT NULL,
     html text NOT NULL,
 
     PRIMARY KEY (name)
@@ -276,11 +277,11 @@ CREATE TABLE pages (
 
 -- POPULATE DATABASE
 
-INSERT INTO members (handle, first_name, last_name, phone, email, acm_id, join_date) VALUES
-    ('geedubz','Washington','George','2348571998','george.washington@usma.edu',38275,'1999-08-21'),
-    ('haxor','Adams','John','2349871468','johnyboy@gmail.com',39571,'2004-01-15'),
-    ( 'librarian','Jefferson','Thomas','8489061234','thomas.jefferson@usma.edu',19045,'2012-12-31'),
-    ( 'uMadSon?','Madison','James','8456781230','proskater1800@aol.com',88834,'1995-11-13');
+-- INSERT INTO members (handle, first_name, last_name, phone, email, acm_id, join_date) VALUES
+--    ('geedubz','Washington','George','2348571998','george.washington@usma.edu',38275,'1999-08-21'),
+--    ('haxor','Adams','John','2349871468','johnyboy@gmail.com',39571,'2004-01-15'),
+--    ( 'librarian','Jefferson','Thomas','8489061234','thomas.jefferson@usma.edu',19045,'2012-12-31'),
+--    ( 'uMadSon?','Madison','James','8456781230','proskater1800@aol.com',88834,'1995-11-13');
 
 -- CADET STUFF
 
@@ -293,16 +294,16 @@ INSERT INTO grad_years (grad_year) VALUES
     ('2018');
 
 INSERT INTO majors (major_name) VALUES
-    ('electrical engineering'),
-    ('computer science'),
+    ('Electrical Engineering'),
+    ('Computer Science'),
     ('memory corruption'),
-    ('mathematical sciences'),
-    ('management'),
-    ('cyber security');
+    ('Mathematical Sciences'),
+    ('Management'),
+    ('Cyber Security');
 
-INSERT INTO cadets (handle, xnumber, grad_year, major) VALUES
-    ('geedubz','49294','2014','management'),
-    ('haxor','39581','2016','cyber security');
+-- INSERT INTO cadets (handle, xnumber, grad_year, major) VALUES
+--    ('geedubz','49294','2014','management'),
+--    ('haxor','39581','2016','cyber security');
 
 -- OFFICER STUFF
 
@@ -312,9 +313,9 @@ INSERT INTO ranks (rank) VALUES
     ('colonel'),
     ('general');
 
-INSERT INTO officers (handle, rank) VALUES
-    ('librarian','colonel'),
-    ('uMadSon?','general');
+-- INSERT INTO officers (handle, rank) VALUES
+--    ('librarian','colonel'),
+--    ('uMadSon?','general');
 
 -- MEMBER STUFF
 
@@ -369,33 +370,33 @@ INSERT INTO events (event_name, location, category, start_date, start_time, end_
 
 -- LESSON STUFF
 
-INSERT INTO lessons (name, description, image_link, on_date) VALUES
-    ("Lesson 12 - Buffer Overflows", "overflow the buffer darnit", "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg", "2015-02-01"),
-    ("Lesson 11 - Format Strings", "format the strings", "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg", "2015-01-01");
+INSERT INTO lessons (name, markdown, description, image_link, video_link, on_date) VALUES
+    ("Lesson 12 - Buffer Overflows", "", "overflow the buffer darnit", "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg", "", "2015-02-01"),
+    ("Lesson 11 - Format Strings", "", "format the strings", "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg", "", "2015-01-01");
 
 -- LINKAGE
 
-INSERT INTO member_holds_position (handle, duty_position, start_date, end_date) VALUES
-    ('librarian','OIC','2013-01-01','2014-01-01'),
-    ('geedubz','CIC','2013-01-01','2015-01-01'),
-    ('haxor','XO','2013-01-01','2014-12-30');
+-- INSERT INTO member_holds_position (handle, duty_position, start_date, end_date) VALUES
+--    ('librarian','OIC','2013-01-01','2014-01-01'),
+--    ('geedubz','CIC','2013-01-01','2015-01-01'),
+--    ('haxor','XO','2013-01-01','2014-12-30');
 
-INSERT INTO member_solves_challenge (handle, challenge, solve_date) VALUES
-    ('haxor','find me','2013-02-14'),
-    ('haxor','echo','2012-06-16'),
-    ('haxor','NOP what you expect','2013-07-20'),
-    ('librarian','RSAy what is up','2014-07-01'),
-    ('geedubz','echo','2012-05-30');
+-- INSERT INTO member_solves_challenge (handle, challenge, solve_date) VALUES
+--    ('haxor','find me','2013-02-14'),
+--    ('haxor','echo','2012-06-16'),
+--    ('haxor','NOP what you expect','2013-07-20'),
+--    ('librarian','RSAy what is up','2014-07-01'),
+--    ('geedubz','echo','2012-05-30');
 
-INSERT INTO member_attends_event (handle, event, start_date) VALUES
-    ('librarian','Buffer Overflows 101','2014-11-14'),
-    ('haxor','Buffer Overflows 101','2014-11-14'),
-    ('geedubz','DEFCON 22','2013-08-15');
+-- INSERT INTO member_attends_event (handle, event, start_date) VALUES
+--    ('librarian','Buffer Overflows 101','2014-11-14'),
+--    ('haxor','Buffer Overflows 101','2014-11-14'),
+--    ('geedubz','DEFCON 22','2013-08-15');
 
-INSERT INTO member_attends_lesson (handle, lesson) VALUES
-    ("geedubz", "Lesson 11 - Format Strings"),
-    ("geedubz", "Lesson 12 - Buffer Overflows"),
-    ("haxor", "Lesson 11 - Format Strings");
+-- INSERT INTO member_attends_lesson (handle, lesson) VALUES
+--    ("geedubz", "Lesson 11 - Format Strings"),
+--    ("geedubz", "Lesson 12 - Buffer Overflows"),
+--    ("haxor", "Lesson 11 - Format Strings");
 
 INSERT INTO challenge_for_lesson (challenge, lesson) VALUES
     ("echo", "Lesson 11 - Format Strings"),
@@ -408,10 +409,10 @@ INSERT INTO challenge_at_event (challenge, event) VALUES
 -- PAGES
 
 INSERT INTO pages (name, html, markdown) VALUES
-    ("Home", "herp", "*sample homepage*"),
-    ("About", "derp", "##sample markdown");
+    ("Home", "<p><em>sample homepage</em></p>", "*sample homepage*"),
+    ("About", "<h2>sample markdown</h2", "##sample markdown");
 
-INSERT INTO resources (title, html, markdown) VALUES
-    ("", "<p>This is the main page</p>", "This is the main page"),
-    ("Getting Started", "<p>This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.</p>", "This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.");
+INSERT INTO resources (title, rank, html, markdown) VALUES
+    ("Welcome", -1, "<p>This is the main page</p>", "This is the main page"),
+    ("Getting Started", 1, "<p>This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.</p>", "This is the getting started section of the resources page. This will point you to some pages about how to install VMs, use the command, and other introductory tasks.");
 

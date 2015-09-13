@@ -40,32 +40,32 @@ module.exports = (app, passport) ->
       user: req.user
 
   app.get '/resources', (req, res) ->
-    api.getResource ''
-    .then (content) ->
-      if content.length
+    api.getResource {title: 'Welcome'}
+    .then (resource) ->
         api.getResourceTitles()
         .then (resources) ->
           res.render "resources.jade",
             loggedin: req.isAuthenticated()
             user: req.user
             resources: resources
-            content: content[0]
-      else
-        res.redirect '/'
+            content: resource
+    .catch (errorMessage) ->
+      console.log errorMessage
+      res.redirect '/resources'
 
   app.get '/resources/:topic', (req, res) ->
-    api.getResourceTitles()
-    .then (resources) ->
-      api.getResource req.params.topic
-      .then (content) ->
-        if content.length
-          res.render "resources.jade",
-            loggedin: req.isAuthenticated()
-            user: req.user
-            resources: resources
-            content: content[0]
-        else
-          res.redirect '/resources'
+    api.getResource {title: req.params.topic}
+    .then (resource) ->
+      api.getResourceTitles()
+      .then (resources) ->
+        res.render "resources.jade",
+          loggedin: req.isAuthenticated()
+          user: req.user
+          resources: resources
+          content: resource
+    .catch (errorMessage) ->
+      console.log errorMessage
+      res.redirect '/resources'
 
   app.get '/about', (req, res) ->
     api.getPage 'About'
@@ -174,6 +174,56 @@ module.exports = (app, passport) ->
     api.deleteLesson req.params.title
     .then () ->
       res.redirect '/admin/lessons'
+
+  app.get '/admin/resources', isLoggedIn, isAdmin, (req, res) ->
+    api.getResourceTitles()
+    .then (resources) ->
+      res.render 'admin/resources',
+        loggedin: true
+        user: req.user
+        resources: resources
+        flash: req.flash 'resourceMessage'
+
+  app.get '/admin/resources/addresource', isLoggedIn, isAdmin, (req, res) ->
+    res.render 'admin/addresource',
+      loggedin: true
+      user: req.user
+
+  app.post '/admin/resources/addresource', isLoggedIn, isAdmin, (req, res) ->
+    api.addResource req.body
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'resourceMessage', errorMessage
+    .finally () ->
+      res.redirect '/admin/resources'
+
+  app.get '/admin/resources/edit/:title', isLoggedIn, isAdmin, (req, res) ->
+    api.getResource {title: req.params.title}
+    .then (resource) ->
+      res.render 'admin/editresource',
+        loggedin: true
+        user: req.user
+        resource: resource
+
+  app.post '/admin/resources/edit/:title', isLoggedIn, isAdmin, (req, res) ->
+    page = req.body
+    api.editResource page
+    .then () ->
+      undefined
+    .catch (errorMessage) ->
+      req.flash 'resourceMessage', errorMessage
+    .finally () ->
+      res.redirect '/admin/resources/'
+
+  app.get '/admin/resources/delete/:title', isLoggedIn, isAdmin, (req, res) ->
+    api.deleteResource {title: req.params.title}
+    .then () ->
+      undefined
+    .catch () ->
+      req.flash 'resourceMessage', "There was an error deleting " + req.params.title + "."
+    .finally () ->
+      res.redirect '/admin/resources/'
 
   app.get '/admin/home', isLoggedIn, isAdmin, (req, res) ->
     api.getPage "Home"

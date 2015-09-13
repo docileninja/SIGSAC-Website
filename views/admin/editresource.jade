@@ -1,0 +1,21 @@
+include ../templates.jade
+doctype html
+html(lang="en")
+    +_head("Admin Panel")
+    body
+        #site_strip
+            +_header(loggedin, user)
+            main
+                +_admin()
+                section.content
+                    h2 Edit #{resource.title}
+                    form(action="/admin/resources/edit/#{resource.title}" method="POST")
+                        input(type="hidden" value="#{resource.title}" name="title")
+                        h3 Markdown
+                        textarea(name="markdown" style="height: 200px;" id="input") #{resource.markdown}
+                        h3 Preview
+                        div#preview
+                        input(type="submit" value="Update")
+            +_footer()
+    script(src="/lib/markdown.js")
+    script(src="/lib/preview.js")

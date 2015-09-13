@@ -7,11 +7,7 @@ html(lang="en")
             +_header(loggedin, user)
             main
                 h1(class="page_title") Resources
-                aside(class="sidebar")
-                    ul
-                        each resource in resources
-                            li
-                                a(href="#{resource.link}") #{resource.title}
+                +_resources_sidebar(resources)
                 section(style="float: left; padding: 0 2.5%; width: 74%;")
                     h2 #{content.title}
                     span !{content.html}

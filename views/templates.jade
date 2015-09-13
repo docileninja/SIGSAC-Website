@@ -100,3 +100,9 @@ mixin _admin()
 			li
 				a(href="/admin/uploadchallenge") Upload Challenge
 
+mixin _resources_sidebar(resources)
+	aside(class="sidebar")
+		ul
+			each resource in resources
+				li
+					a(href="/resources/#{resource.title}") #{resource.title}
