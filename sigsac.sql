@@ -277,12 +277,6 @@ CREATE TABLE pages (
 
 -- POPULATE DATABASE
 
--- INSERT INTO members (handle, first_name, last_name, phone, email, acm_id, join_date) VALUES
---    ('geedubz','Washington','George','2348571998','george.washington@usma.edu',38275,'1999-08-21'),
---    ('haxor','Adams','John','2349871468','johnyboy@gmail.com',39571,'2004-01-15'),
---    ( 'librarian','Jefferson','Thomas','8489061234','thomas.jefferson@usma.edu',19045,'2012-12-31'),
---    ( 'uMadSon?','Madison','James','8456781230','proskater1800@aol.com',88834,'1995-11-13');
-
 -- CADET STUFF
 
 INSERT INTO grad_years (grad_year) VALUES
@@ -301,10 +295,6 @@ INSERT INTO majors (major_name) VALUES
     ('Management'),
     ('Cyber Security');
 
--- INSERT INTO cadets (handle, xnumber, grad_year, major) VALUES
---    ('geedubz','49294','2014','management'),
---    ('haxor','39581','2016','cyber security');
-
 -- OFFICER STUFF
 
 INSERT INTO ranks (rank) VALUES
@@ -312,10 +302,6 @@ INSERT INTO ranks (rank) VALUES
     ('major'),
     ('colonel'),
     ('general');
-
--- INSERT INTO officers (handle, rank) VALUES
---    ('librarian','colonel'),
---    ('uMadSon?','general');
 
 -- MEMBER STUFF
 
@@ -375,28 +361,6 @@ INSERT INTO lessons (name, markdown, description, image_link, video_link, on_dat
     ("Lesson 11 - Format Strings", "", "format the strings", "https://i.ytimg.com/vi/sWIsYWnJIBU/mqdefault.jpg", "", "2015-01-01");
 
 -- LINKAGE
-
--- INSERT INTO member_holds_position (handle, duty_position, start_date, end_date) VALUES
---    ('librarian','OIC','2013-01-01','2014-01-01'),
---    ('geedubz','CIC','2013-01-01','2015-01-01'),
---    ('haxor','XO','2013-01-01','2014-12-30');
-
--- INSERT INTO member_solves_challenge (handle, challenge, solve_date) VALUES
---    ('haxor','find me','2013-02-14'),
---    ('haxor','echo','2012-06-16'),
---    ('haxor','NOP what you expect','2013-07-20'),
---    ('librarian','RSAy what is up','2014-07-01'),
---    ('geedubz','echo','2012-05-30');
-
--- INSERT INTO member_attends_event (handle, event, start_date) VALUES
---    ('librarian','Buffer Overflows 101','2014-11-14'),
---    ('haxor','Buffer Overflows 101','2014-11-14'),
---    ('geedubz','DEFCON 22','2013-08-15');
-
--- INSERT INTO member_attends_lesson (handle, lesson) VALUES
---    ("geedubz", "Lesson 11 - Format Strings"),
---    ("geedubz", "Lesson 12 - Buffer Overflows"),
---    ("haxor", "Lesson 11 - Format Strings");
 
 INSERT INTO challenge_for_lesson (challenge, lesson) VALUES
     ("echo", "Lesson 11 - Format Strings"),
